@@ -7,7 +7,7 @@
     <meta name="description" content="Премиальный портфолио-сайт вымышленных наушников Nikitka AI PRO: кинематографичный hero, интерактивная анатомия, живой радиотест и продуктовая motion-витрина.">
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="preload" as="image" href="assets/hero-cinematic-desktop.avif" imagesrcset="assets/hero-cinematic-mobile.avif 960w, assets/hero-cinematic-desktop.avif 1920w" imagesizes="100vw" type="image/avif" fetchpriority="high">
-    <link rel="stylesheet" href="style.css?v=20260522-real-audio">
+    <link rel="stylesheet" href="style.css?v=20260522-clean-anatomy">
 </head>
 <body>
 
@@ -311,26 +311,27 @@
 
                 <!-- 3D Exploded Interactive Sub-Panel -->
                 <div class="exploded-panel glass-card">
-                    <div>
+                    <div class="exploded-copy-block">
                         <h3 class="exploded-title">Интерактивная Нейро-Анатомия</h3>
                         <p class="exploded-copy">
-                            Прозрачный корпус раскрывает акустический тракт: драйвер, AI-плата и сенсорная мембрана сходятся в одном компактном модуле.
+                            Один чистый разбор без визуального шума: цельный модуль раскрывается на корпус, драйвер, AI-чип и сенсор.
                         </p>
 
                         <div class="anatomy-control-strip">
                             <button id="anatomy-scan-toggle" class="anatomy-scan-btn" type="button" aria-pressed="false">
-                                Разобрать
+                                Разобрать модуль
                             </button>
-                            <div class="anatomy-progress" aria-hidden="true">
-                                <span id="anatomy-progress-fill"></span>
-                            </div>
-                            <span id="anatomy-readout" class="anatomy-readout" aria-live="polite">Собранный режим</span>
+                            <span id="anatomy-readout" class="anatomy-readout" aria-live="polite">Цельный модуль</span>
+                        </div>
+
+                        <div class="anatomy-progress" aria-hidden="true">
+                            <span id="anatomy-progress-fill"></span>
                         </div>
 
                         <div class="anatomy-proof-line" aria-label="Ключевые слои">
-                            <span>0.8 мм корпус</span>
-                            <span>12 мм драйвер</span>
-                            <span>AI DSP</span>
+                            <span><b>01</b> Корпус</span>
+                            <span><b>02</b> Драйвер</span>
+                            <span><b>03</b> AI-чип</span>
                         </div>
                     </div>
                     
@@ -933,6 +934,6 @@
         </div>
     </footer>
 
-    <script src="app.js?v=20260522-real-audio"></script>
+    <script src="app.js?v=20260522-clean-anatomy"></script>
 </body>
 </html>

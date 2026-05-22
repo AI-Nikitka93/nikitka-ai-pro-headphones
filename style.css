@@ -920,14 +920,18 @@ section {
 .exploded-panel {
     margin-top: clamp(2rem, 3vw, 3rem);
     display: grid;
-    grid-template-columns: minmax(280px, 0.78fr) minmax(420px, 1.22fr);
-    gap: clamp(1.8rem, 3vw, 3rem);
+    grid-template-columns: minmax(280px, 0.72fr) minmax(430px, 1.28fr);
+    gap: clamp(1.5rem, 3.5vw, 3.6rem);
     align-items: center;
     overflow: hidden;
+    background:
+        linear-gradient(135deg, rgba(8, 6, 20, 0.82), rgba(4, 3, 12, 0.9)),
+        var(--glass-bg);
 }
 
-.exploded-panel > div:first-child {
+.exploded-copy-block {
     min-width: 0;
+    max-width: 420px;
 }
 
 .exploded-title {
@@ -940,13 +944,17 @@ section {
     font-size: 0.9rem;
     color: var(--text-muted);
     line-height: 1.6;
-    max-width: 48ch;
+    max-width: 42ch;
 }
 
 .exploded-design-stage {
-    height: 348px;
-    background: none;
-    border: none;
+    height: clamp(320px, 31vw, 430px);
+    background:
+        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.13), transparent 46%),
+        linear-gradient(145deg, rgba(0, 240, 255, 0.04), rgba(138, 43, 226, 0.03));
+    border: 1px solid rgba(0, 240, 255, 0.09);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .svg-defs {
@@ -974,25 +982,30 @@ section {
 }
 
 .exploded-viewer::before {
-    inset: 16% 4%;
-    border: 1px solid rgba(0, 240, 255, 0.14);
-    border-radius: 8px;
+    width: min(56%, 330px);
+    aspect-ratio: 1;
+    inset: 50% auto auto 50%;
+    border: 1px solid rgba(0, 240, 255, 0.13);
+    border-radius: 50%;
     background:
-        linear-gradient(90deg, transparent 49%, rgba(0, 240, 255, 0.14) 50%, transparent 51%),
-        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.14), transparent 58%);
-    opacity: 0.65;
-    transform: skewX(-12deg);
+        radial-gradient(circle at 50% 50%, transparent 42%, rgba(0, 240, 255, 0.12) 43%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.09), transparent 68%);
+    opacity: 0.72;
+    transform: translate(-50%, -50%);
     z-index: 0;
 }
 
 .exploded-viewer::after {
-    inset: 13% 2%;
-    border-radius: 8px;
+    top: 10%;
+    bottom: 10%;
+    left: 50%;
+    width: 56px;
+    border-radius: 999px;
     background:
-        linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.08) 47%, rgba(0, 240, 255, 0.34) 50%, rgba(0, 240, 255, 0.08) 53%, transparent 100%);
+        linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.26) 50%, transparent 100%);
     opacity: 0;
     mix-blend-mode: screen;
-    transform: translateX(-34%);
+    transform: translateX(-50%);
     transition: opacity 0.24s ease;
     z-index: 8;
 }
@@ -1003,8 +1016,8 @@ section {
 
 .layer-img {
     position: absolute;
-    width: min(42vw, 156px);
-    max-width: 156px;
+    width: min(34vw, 154px);
+    max-width: 154px;
     filter: drop-shadow(0 15px 30px rgba(138, 43, 226, 0.2));
     transition:
         transform 0.16s ease-out,
@@ -1055,7 +1068,7 @@ section {
 }
 
 .exploded-viewer.active .viewer-label {
-    opacity: 0.68;
+    opacity: 0;
 }
 
 .viewer-label.active {
@@ -1066,18 +1079,18 @@ section {
     transform: translateY(-2px);
 }
 
-.exploded-viewer .lbl-shell { bottom: 5%; left: 0%; }
-.exploded-viewer .lbl-driver { bottom: 20%; left: 20%; }
-.exploded-viewer .lbl-board { top: 18%; right: 16%; }
-.exploded-viewer .lbl-case { top: 10%; right: 6%; }
+.exploded-viewer .lbl-shell { bottom: 16%; left: 13%; }
+.exploded-viewer .lbl-driver { bottom: 24%; left: 27%; }
+.exploded-viewer .lbl-board { top: 23%; right: 24%; }
+.exploded-viewer .lbl-case { top: 17%; right: 13%; }
 
 .anatomy-orbit-hint {
     position: absolute;
-    top: 0.35rem;
-    left: 50%;
+    top: 1rem;
+    right: 1rem;
     z-index: 9;
-    transform: translateX(-50%);
-    color: rgba(0, 240, 255, 0.74);
+    transform: none;
+    color: rgba(0, 240, 255, 0.5);
     font-size: 0.66rem;
     font-weight: 900;
     letter-spacing: 0;
@@ -1127,9 +1140,9 @@ section {
 
 .anatomy-progress {
     position: relative;
-    flex: 1 1 150px;
-    min-width: 150px;
+    width: min(100%, 300px);
     height: 3px;
+    margin-top: 0.8rem;
     overflow: hidden;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.12);
@@ -1145,9 +1158,13 @@ section {
 }
 
 .anatomy-readout {
-    min-width: 9.5rem;
+    min-width: 0;
     color: var(--text-muted);
     font-size: 0.78rem;
+    padding: 0.54rem 0.72rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .anatomy-proof-line {
@@ -1167,6 +1184,12 @@ section {
     color: rgba(255, 255, 255, 0.72);
     background: rgba(255, 255, 255, 0.035);
     font-size: 0.72rem;
+}
+
+.anatomy-proof-line b {
+    color: var(--secondary);
+    font-size: 0.64rem;
+    margin-right: 0.35rem;
 }
 
 /* Cinematic Inside Product Section */
@@ -3160,8 +3183,7 @@ footer {
         font-size: 0.58rem;
     }
     .viewer-label {
-        font-size: 0.66rem;
-        padding: 0.25rem 0.45rem;
+        display: none;
     }
     .exploded-viewer .lbl-driver {
         left: 12%;

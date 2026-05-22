@@ -621,7 +621,6 @@ function initExplodedViewer() {
     const viewer = document.getElementById('exploded-viewer');
     const layerImages = viewer ? viewer.querySelectorAll('.layer-img[data-layer]') : [];
     const layerLabels = viewer ? viewer.querySelectorAll('.viewer-label[data-layer-label]') : [];
-    const panel = viewer ? viewer.closest('.exploded-panel') : null;
     const scanButton = document.getElementById('anatomy-scan-toggle');
     const progressFill = document.getElementById('anatomy-progress-fill');
     const readout = document.getElementById('anatomy-readout');
@@ -629,11 +628,11 @@ function initExplodedViewer() {
     if (!viewer || !layerImages.length) return;
 
     const layers = [
-        { key: 'sealed', label: 'Собранный режим', threshold: 0 },
-        { key: 'shell', label: 'Корпус раскрыт', threshold: 0.18 },
-        { key: 'driver', label: 'Драйвер в фокусе', threshold: 0.42 },
-        { key: 'board', label: 'AI-чип в фокусе', threshold: 0.68 },
-        { key: 'case', label: 'Сенсор раскрыт', threshold: 0.88 }
+        { key: 'sealed', label: 'Цельный модуль', threshold: 0 },
+        { key: 'shell', label: 'Корпус отделен', threshold: 0.18 },
+        { key: 'driver', label: 'Драйвер в центре', threshold: 0.42 },
+        { key: 'board', label: 'AI-чип раскрыт', threshold: 0.68 },
+        { key: 'case', label: 'Сенсорная крышка', threshold: 0.88 }
     ];
     const layerMap = {
         shell: viewer.querySelector('.layer-shell'),
@@ -644,7 +643,6 @@ function initExplodedViewer() {
     const clamp = (value, min = 0, max = 1) => Math.min(Math.max(value, min), max);
     const smooth = (value) => value * value * (3 - (2 * value));
     let currentProgress = 0;
-    let userLocked = false;
     let animationFrame = null;
 
     const getPhase = (progress) => {
@@ -699,7 +697,7 @@ function initExplodedViewer() {
             const isOpen = progress > 0.68;
             scanButton.classList.toggle('is-open', isOpen);
             scanButton.setAttribute('aria-pressed', String(isOpen));
-            scanButton.textContent = isOpen ? 'Собрать' : 'Разобрать';
+            scanButton.textContent = isOpen ? 'Собрать модуль' : 'Разобрать модуль';
         }
     };
 
@@ -721,70 +719,38 @@ function initExplodedViewer() {
         animationFrame = requestAnimationFrame(tick);
     };
 
-    const updateFromScroll = () => {
-        if (!panel || userLocked) return;
-        const rect = panel.getBoundingClientRect();
-        const viewport = window.innerHeight || document.documentElement.clientHeight;
-        const progress = clamp((viewport * 0.72 - rect.top) / (rect.height * 0.9));
-        renderProgress(progress);
-    };
-
     viewer.addEventListener('pointermove', (event) => {
         if (window.matchMedia('(pointer: coarse)').matches) return;
         const rect = viewer.getBoundingClientRect();
         const progress = clamp((event.clientX - rect.left) / rect.width);
         const tilt = clamp(((event.clientY - rect.top) / rect.height) - 0.5, -0.5, 0.5);
-        userLocked = true;
         viewer.classList.add('is-scrubbing');
         renderProgress(progress, tilt);
     });
 
     viewer.addEventListener('pointerleave', () => {
         if (window.matchMedia('(pointer: coarse)').matches) return;
-        userLocked = false;
         viewer.classList.remove('is-scrubbing');
-        updateFromScroll();
     });
 
     if (scanButton) {
         scanButton.addEventListener('click', () => {
-            userLocked = true;
             const target = currentProgress > 0.6 ? 0 : 1;
             viewer.classList.toggle('is-scrubbing', target > 0);
             animateTo(target);
             window.setTimeout(() => {
                 if (target === 0) {
-                    userLocked = false;
                     viewer.classList.remove('is-scrubbing');
                 }
             }, 680);
         });
     }
 
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-            updateFromScroll();
-            ticking = false;
-        });
-    }, { passive: true });
-
     window.addEventListener('resize', () => {
         renderProgress(currentProgress);
     });
 
-    if ('IntersectionObserver' in window && panel) {
-        const observer = new IntersectionObserver((entries) => {
-            const entry = entries[0];
-            if (entry && entry.isIntersecting) updateFromScroll();
-        }, { threshold: [0.15, 0.35, 0.6] });
-        observer.observe(panel);
-    }
-
     renderProgress(0);
-    updateFromScroll();
 }
 
 /* ==========================================================================
