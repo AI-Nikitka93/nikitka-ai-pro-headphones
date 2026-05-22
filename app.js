@@ -618,54 +618,95 @@ function initModelSwitcher() {
    4. INTERACTIVE EXPLODED 3D VIEW
    ========================================================================== */
 function initExplodedViewer() {
-    const slider = document.getElementById('explode-slider');
     const viewer = document.getElementById('exploded-viewer');
-    const labels = document.querySelectorAll('.viewer-label');
+    const layerButtons = document.querySelectorAll('.layer-command');
+    const layerImages = viewer ? viewer.querySelectorAll('.layer-img[data-layer]') : [];
+    const layerLabels = viewer ? viewer.querySelectorAll('.viewer-label[data-layer-label]') : [];
+    const autoButton = document.getElementById('layer-auto-scan');
+    const autoButtonText = autoButton ? autoButton.querySelector('.layer-auto-text') : null;
+    const readout = document.getElementById('layer-readout');
 
-    if (!slider || !viewer) return;
+    if (!viewer || !layerButtons.length) return;
 
-    slider.addEventListener('input', (e) => {
-        const val = parseInt(e.target.value);
-        
-        // Active exploded state
-        if (val > 10) {
-            viewer.classList.add('active');
-        } else {
-            viewer.classList.remove('active');
+    const layers = [
+        { key: 'shell', index: '01', name: 'Корпус' },
+        { key: 'driver', index: '02', name: 'Драйвер' },
+        { key: 'board', index: '03', name: 'AI-чип' },
+        { key: 'case', index: '04', name: 'Сенсор' }
+    ];
+    const layerByKey = layers.reduce((acc, layer) => {
+        acc[layer.key] = layer;
+        return acc;
+    }, {});
+    let activeIndex = 0;
+    let scanTimer = null;
+
+    const setLayer = (layerKey) => {
+        const layer = layerByKey[layerKey] || layers[0];
+        activeIndex = layers.findIndex(item => item.key === layer.key);
+
+        viewer.classList.add('active');
+        viewer.dataset.activeLayer = layer.key;
+
+        layerButtons.forEach((button) => {
+            const isActive = button.dataset.layer === layer.key;
+            button.classList.toggle('active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+        });
+
+        layerImages.forEach((image) => {
+            image.classList.toggle('active-layer', image.dataset.layer === layer.key);
+        });
+
+        layerLabels.forEach((label) => {
+            label.classList.toggle('active', label.dataset.layerLabel === layer.key);
+        });
+
+        if (readout) {
+            readout.textContent = `${layer.index} / ${layer.name} активен`;
         }
+    };
 
-        // Programmatically distribute layers based on slider percentage
-        const layerShell = viewer.querySelector('.layer-shell');
-        const layerDriver = viewer.querySelector('.layer-driver');
-        const layerBoard = viewer.querySelector('.layer-board');
-        const layerCase = viewer.querySelector('.layer-case');
+    const stopScan = () => {
+        if (scanTimer) {
+            clearInterval(scanTimer);
+            scanTimer = null;
+        }
+        viewer.classList.remove('scanning');
+        if (autoButton) {
+            autoButton.classList.remove('active');
+            autoButton.setAttribute('aria-pressed', 'false');
+            if (autoButtonText) autoButtonText.textContent = 'Автоскан';
+        }
+    };
 
-        const offsetShell = -1.2 * val;
-        const offsetDriver = -0.4 * val;
-        const offsetBoard = 0.4 * val;
-        const offsetCase = 1.2 * val;
-
-        const scaleShell = 1 - (val * 0.001);
-        const scaleDriver = 1 - (val * 0.0005);
-        const scaleBoard = 1 + (val * 0.0002);
-        const scaleCase = 1 + (val * 0.001);
-
-        const rotateShell = -0.1 * val;
-        const rotateDriver = -0.05 * val;
-        const rotateBoard = 0.05 * val;
-        const rotateCase = 0.1 * val;
-
-        layerShell.style.transform = `translateX(${offsetShell}px) scale(${scaleShell}) rotate(${rotateShell}deg)`;
-        layerDriver.style.transform = `translateX(${offsetDriver}px) scale(${scaleDriver}) rotate(${rotateDriver}deg)`;
-        layerBoard.style.transform = `translateX(${offsetBoard}px) scale(${scaleBoard}) rotate(${rotateBoard}deg)`;
-        layerCase.style.transform = `translateX(${offsetCase}px) scale(${scaleCase}) rotate(${rotateCase}deg)`;
-
-        // Opacities adjusting
-        layerShell.style.opacity = 0.4 + (val * 0.003);
-        layerDriver.style.opacity = 0.4 + (val * 0.004);
-        layerBoard.style.opacity = 0.4 + (val * 0.004);
-        layerCase.style.opacity = 0.9 + (val * 0.001);
+    layerButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            stopScan();
+            setLayer(button.dataset.layer);
+        });
     });
+
+    if (autoButton) {
+        autoButton.addEventListener('click', () => {
+            if (scanTimer) {
+                stopScan();
+                return;
+            }
+
+            viewer.classList.add('scanning');
+            autoButton.classList.add('active');
+            autoButton.setAttribute('aria-pressed', 'true');
+            if (autoButtonText) autoButtonText.textContent = 'Стоп скан';
+
+            scanTimer = setInterval(() => {
+                activeIndex = (activeIndex + 1) % layers.length;
+                setLayer(layers[activeIndex].key);
+            }, 1400);
+        });
+    }
+
+    setLayer('shell');
 }
 
 /* ==========================================================================
