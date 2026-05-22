@@ -950,41 +950,44 @@ section {
 .exploded-design-stage {
     height: clamp(320px, 31vw, 430px);
     background:
-        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.13), transparent 46%),
-        linear-gradient(145deg, rgba(0, 240, 255, 0.04), rgba(138, 43, 226, 0.03));
+        radial-gradient(circle at 52% 46%, rgba(0, 240, 255, 0.13), transparent 44%),
+        radial-gradient(circle at 72% 32%, rgba(168, 85, 247, 0.09), transparent 36%),
+        linear-gradient(145deg, rgba(0, 240, 255, 0.04), rgba(8, 6, 20, 0.55));
     border: 1px solid rgba(0, 240, 255, 0.09);
     border-radius: 8px;
     overflow: hidden;
 }
 
-.svg-defs {
-    position: absolute;
-    width: 0;
-    height: 0;
-}
-
-/* 3D Exploded Viewer Styles */
+/* Three.js procedural product viewer */
 .exploded-viewer {
     position: relative;
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     isolation: isolate;
+    cursor: grab;
+    touch-action: none;
 }
 
-.exploded-viewer::before,
-.exploded-viewer::after {
-    content: "";
+.exploded-viewer:active {
+    cursor: grabbing;
+}
+
+.anatomy-canvas {
     position: absolute;
-    pointer-events: none;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 .exploded-viewer::before {
-    width: min(56%, 330px);
+    content: "";
+    position: absolute;
+    width: min(58%, 360px);
     aspect-ratio: 1;
-    inset: 50% auto auto 50%;
+    left: 50%;
+    top: 50%;
     border: 1px solid rgba(0, 240, 255, 0.13);
     border-radius: 50%;
     background:
@@ -993,96 +996,18 @@ section {
     opacity: 0.72;
     transform: translate(-50%, -50%);
     z-index: 0;
-}
-
-.exploded-viewer::after {
-    top: 10%;
-    bottom: 10%;
-    left: 50%;
-    width: 56px;
-    border-radius: 999px;
-    background:
-        linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.26) 50%, transparent 100%);
-    opacity: 0;
-    mix-blend-mode: screen;
-    transform: translateX(-50%);
-    transition: opacity 0.24s ease;
-    z-index: 8;
-}
-
-.exploded-viewer.is-scrubbing::after {
-    opacity: 0.75;
-}
-
-.layer-img {
-    position: absolute;
-    width: min(34vw, 154px);
-    max-width: 154px;
-    filter: drop-shadow(0 15px 30px rgba(138, 43, 226, 0.2));
-    transition:
-        transform 0.16s ease-out,
-        opacity 0.22s ease,
-        filter 0.22s ease;
-    opacity: 0.52;
-    will-change: transform, opacity;
-}
-
-.layer-img.layer-case {
-    z-index: 5;
-    opacity: 0.9;
-}
-.layer-img.layer-board {
-    z-index: 4;
-}
-.layer-img.layer-driver {
-    z-index: 3;
-}
-.layer-img.layer-shell {
-    z-index: 2;
-}
-
-.exploded-viewer.active .layer-img {
-    filter: drop-shadow(0 0 24px rgba(0, 240, 255, 0.2));
-}
-
-.exploded-viewer[data-phase="shell"] .layer-shell,
-.exploded-viewer[data-phase="driver"] .layer-driver,
-.exploded-viewer[data-phase="board"] .layer-board,
-.exploded-viewer[data-phase="case"] .layer-case {
-    opacity: 1;
-    filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.62));
-}
-
-.viewer-label {
-    position: absolute;
-    background: rgba(8, 6, 20, 0.85);
-    border: 1px solid var(--secondary);
-    padding: 0.3rem 0.7rem;
-    border-radius: 6px;
-    font-size: 0.7rem;
-    color: #fff;
-    opacity: 0;
-    transition: var(--transition-smooth);
     pointer-events: none;
-    white-space: nowrap;
 }
 
-.exploded-viewer.active .viewer-label {
-    opacity: 0;
+.anatomy-stage-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background:
+        linear-gradient(90deg, rgba(4, 3, 10, 0.34), transparent 22%, transparent 76%, rgba(4, 3, 10, 0.46)),
+        linear-gradient(180deg, rgba(4, 3, 10, 0.24), transparent 32%, rgba(4, 3, 10, 0.35));
+    pointer-events: none;
 }
-
-.viewer-label.active {
-    opacity: 1 !important;
-    border-color: var(--secondary);
-    background: rgba(4, 12, 24, 0.92);
-    box-shadow: 0 0 22px rgba(0, 240, 255, 0.22);
-    transform: translateY(-2px);
-}
-
-.exploded-viewer .lbl-shell { bottom: 16%; left: 13%; }
-.exploded-viewer .lbl-driver { bottom: 24%; left: 27%; }
-.exploded-viewer .lbl-board { top: 23%; right: 24%; }
-.exploded-viewer .lbl-case { top: 17%; right: 13%; }
 
 .anatomy-orbit-hint {
     position: absolute;
@@ -1090,11 +1015,28 @@ section {
     right: 1rem;
     z-index: 9;
     transform: none;
-    color: rgba(0, 240, 255, 0.5);
+    color: rgba(0, 240, 255, 0.56);
     font-size: 0.66rem;
     font-weight: 900;
     letter-spacing: 0;
     pointer-events: none;
+}
+
+.anatomy-runtime-fallback {
+    position: absolute;
+    inset: auto 1rem 1rem 1rem;
+    z-index: 10;
+    display: none;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(239, 68, 68, 0.36);
+    border-radius: 8px;
+    background: rgba(24, 6, 12, 0.8);
+    color: #fecaca;
+    font-size: 0.78rem;
+}
+
+.exploded-viewer.webgl-missing .anatomy-runtime-fallback {
+    display: block;
 }
 
 .anatomy-control-strip {
@@ -3179,17 +3121,9 @@ footer {
         display: block;
     }
     .anatomy-orbit-hint {
-        top: 0;
+        top: 0.75rem;
+        right: 0.75rem;
         font-size: 0.58rem;
-    }
-    .viewer-label {
-        display: none;
-    }
-    .exploded-viewer .lbl-driver {
-        left: 12%;
-    }
-    .exploded-viewer .lbl-board {
-        right: 12%;
     }
     .tech-grid {
         grid-template-columns: 1fr;
@@ -3219,10 +3153,6 @@ footer {
     }
     .inside-scanline {
         display: none;
-    }
-    .exploded-viewer.is-scrubbing::after {
-        animation: none;
-        opacity: 0.35;
     }
 }
 
