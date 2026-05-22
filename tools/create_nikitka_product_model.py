@@ -166,6 +166,18 @@ def create_earbud(prefix, x, y, z, side=1, floating=False):
         ring = torus(f"{prefix}_fingerprint_ring_{i}", (x + side * 0.12, y - 0.292, z + 0.18), r, 0.006, purple_emit, rotation=(math.pi / 2, 0, 0), scale=(1, 1, 0.25))
         ring.scale.x = 0.8 + i * 0.08
     cyan = cyl(f"{prefix}_mic_port_cyan", (x + side * 0.4, y - 0.2, z - 0.84), 0.035, 0.014, cyan_emit, vertices=28, rotation=(math.pi / 2, 0, 0))
+    cyl(f"{prefix}_vented_driver_mesh", (x - side * 0.2, y - 0.318, z + 0.06), 0.115, 0.012, dark_panel, vertices=48, rotation=(math.pi / 2, 0, 0), scale=(1.1, 0.78, 0.16))
+    for i, wave_radius in enumerate((0.31, 0.44, 0.57)):
+        wave = torus(
+            f"{prefix}_sound_wavefront_ring_{i}",
+            (x - side * (0.26 + i * 0.05), y - 0.35 - i * 0.035, z + 0.06),
+            wave_radius,
+            0.007,
+            cyan_emit if i % 2 == 0 else purple_emit,
+            rotation=(math.pi / 2, 0, 0),
+            scale=(1.08, 0.72, 0.16),
+        )
+        wave["nikitka_stage"] = "signal"
 
     for obj in (body, face, tip, sensor, cyan):
         obj["nikitka_part"] = prefix
@@ -180,11 +192,15 @@ def add_case_internals():
     battery = material("matte graphene battery cell", (0.08, 0.1, 0.12, 1), metallic=0.18, roughness=0.32)
     board = material("dark ai logic board", (0.01, 0.05, 0.065, 1), metallic=0.24, roughness=0.18)
     chip = material("black neural dsp package", (0.006, 0.007, 0.011, 1), metallic=0.48, roughness=0.16)
+    copper = material("warm copper charging contact", (0.9, 0.48, 0.2, 1), metallic=0.72, roughness=0.2, emission=(0.8, 0.26, 0.06, 1), strength=0.25)
 
     for side in (-1, 1):
         cell = cube(f"case_battery_cell_{side}", (side * 1.18, 0.35, 0.64), (1.05, 0.58, 0.16), battery, 0.055, 8)
         cell.rotation_euler[2] = side * math.radians(3)
         add_text(f"case_battery_cell_label_{side}", "GRAPHENE", (side * 1.18, 0.03, 0.74), (math.radians(90), 0, 0), 0.072, white_emit)
+        capsule_between(f"battery_contact_bus_{side}_positive", (side * 0.66, 0.04, 0.72), (side * 1.12, 0.04, 0.72), 0.012, copper)
+        capsule_between(f"battery_contact_bus_{side}_negative", (side * 0.66, 0.08, 0.59), (side * 1.12, 0.08, 0.59), 0.012, copper)
+        cube(f"case_magnetic_latch_{side}", (side * 2.26, -0.78, 0.94), (0.22, 0.08, 0.08), metal, 0.025, 5)
 
     ai_board = cube("ai_core_board_teal_pcb", (0, 0.34, 0.72), (0.92, 0.58, 0.09), board, 0.045, 8)
     ai_board.rotation_euler[2] = math.radians(-2)
@@ -197,8 +213,23 @@ def add_case_internals():
     for i, x in enumerate([-0.52, -0.36, -0.2, 0.2, 0.36, 0.52]):
         capsule_between(f"ai_core_cyan_trace_{i}", (x, 0.005, 0.79), (x * 0.36, 0.005, 0.86), 0.009, cyan_emit)
 
+    torus("case_bottom_qi_charging_coil_outer", (0, 0.34, 0.34), 0.72, 0.018, copper, scale=(1.15, 0.72, 0.08))
+    torus("case_bottom_qi_charging_coil_inner", (0, 0.34, 0.34), 0.52, 0.014, copper, scale=(1.15, 0.72, 0.08))
+    cube("case_flex_ribbon_to_oled", (0, -0.62, 0.64), (0.22, 0.84, 0.025), copper, 0.012, 4)
+
     hinge = cyl("case_precision_hinge_titanium", (0, 1.04, 1.12), 0.055, 4.65, metal, vertices=48, rotation=(0, math.pi / 2, 0), scale=(1, 1, 1))
     hinge.rotation_euler[0] = math.radians(-12)
+
+
+def add_signal_paths():
+    capsule_between("signal_path_ai_to_left_charge_pin", (-0.22, 0.0, 0.86), (-1.45, -0.13, 1.08), 0.012, cyan_emit)
+    capsule_between("signal_path_ai_to_right_charge_pin", (0.22, 0.0, 0.86), (1.45, -0.13, 1.08), 0.012, cyan_emit)
+    capsule_between("signal_path_left_pin_to_driver", (-1.45, -0.13, 1.08), (-1.95, -0.33, 2.31), 0.014, cyan_emit)
+    capsule_between("signal_path_right_pin_to_driver", (1.45, -0.13, 1.08), (1.15, -0.36, 2.16), 0.014, cyan_emit)
+    capsule_between("signal_path_neural_feedback_loop", (-0.2, 0.04, 0.98), (0.2, 0.04, 0.98), 0.01, purple_emit)
+    for obj in bpy.context.scene.objects:
+        if obj.name.startswith("signal_path_"):
+            obj["nikitka_stage"] = "signal"
 
 
 def create_scene():
@@ -230,16 +261,17 @@ def create_scene():
         cyl(f"case_well_dark_cavity_{side}", (side * 1.45, -0.15, 0.95), 0.5, 0.08, dark_panel, vertices=96, scale=(1.26, 0.82, 0.12))
         cyl(f"case_charge_pin_{side}_a", (side * 1.22, -0.16, 1.04), 0.035, 0.035, cyan_emit, vertices=24)
         cyl(f"case_charge_pin_{side}_b", (side * 1.68, -0.16, 1.04), 0.035, 0.035, cyan_emit, vertices=24)
+        cube(f"case_well_gold_contact_bridge_{side}", (side * 1.45, -0.16, 1.08), (0.62, 0.035, 0.035), metal, 0.012, 4)
 
     add_case_internals()
 
-    lid = cube("open_lid_transparent_oled_window", (0, 0.95, 2.02), (4.85, 0.22, 1.75), smoked_glass, 0.16, 14)
-    lid.rotation_euler[0] = math.radians(-12)
-    lid_panel = cube("lid_inner_adaptive_sound_display", (0, 0.78, 2.05), (2.55, 0.05, 0.82), dark_panel, 0.08, 8)
-    lid_panel.rotation_euler[0] = math.radians(-12)
-    add_text("lid_ui_title", "NIKITKA AI PRO", (0, 0.72, 2.24), (math.radians(78), 0, 0), 0.18, white_emit)
-    add_text("lid_ui_adaptive", "ADAPTIVE SOUND  ON", (0, 0.71, 2.05), (math.radians(78), 0, 0), 0.095, cyan_emit)
-    add_text("lid_ui_specs", "96 kHz / 24 bit", (0, 0.70, 1.87), (math.radians(78), 0, 0), 0.092, purple_emit)
+    lid = cube("case_lid_outer_smoked_glass_closed", (0, 0.02, 1.34), (5.08, 2.18, 0.16), smoked_glass, 0.16, 14)
+    cube("case_lid_titanium_hinge_frame", (0, 1.12, 1.22), (4.9, 0.08, 0.16), metal, 0.04, 7)
+    cube("case_lid_front_magnetic_lip", (0, -1.07, 1.22), (4.7, 0.07, 0.12), metal, 0.035, 6)
+    lid_panel = cube("case_lid_inner_adaptive_sound_display", (0, -0.12, 1.43), (2.72, 0.84, 0.045), dark_panel, 0.06, 8)
+    add_text("case_lid_ui_title", "NIKITKA AI PRO", (0, -0.2, 1.48), (0, 0, 0), 0.18, white_emit)
+    add_text("case_lid_ui_adaptive", "ADAPTIVE SOUND  ON", (0, -0.2, 1.6), (0, 0, 0), 0.082, cyan_emit)
+    add_text("case_lid_ui_specs", "96 kHz / 24 bit", (0, -0.2, 1.69), (0, 0, 0), 0.078, purple_emit)
 
     torus("hologram_wave_base", (0, -0.2, 1.18), 0.43, 0.018, cyan_emit, scale=(1.3, 1.3, 0.14))
     for i, h in enumerate([0.18, 0.32, 0.48, 0.64, 0.38, 0.26, 0.44, 0.28, 0.16]):
@@ -248,6 +280,7 @@ def create_scene():
 
     create_earbud("left_floating_earbud", -1.75, -0.14, 2.25, side=-1, floating=True)
     create_earbud("right_docked_earbud", 1.35, -0.18, 2.1, side=1, floating=False)
+    add_signal_paths()
 
     # Accent arcs around the whole product.
     torus("product_floor_neon_orbit", (0, -0.08, -0.08), 2.35, 0.012, purple_emit, scale=(1.15, 0.5, 0.05))

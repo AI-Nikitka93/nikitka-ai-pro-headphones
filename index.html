@@ -7,8 +7,8 @@
     <meta name="description" content="Премиальный портфолио-сайт вымышленных наушников Nikitka AI PRO: кинематографичный hero, интерактивная анатомия, живой радиотест и продуктовая motion-витрина.">
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="preload" as="image" href="assets/hero-cinematic-desktop.avif" imagesrcset="assets/hero-cinematic-mobile.avif 960w, assets/hero-cinematic-desktop.avif 1920w" imagesizes="100vw" type="image/avif" fetchpriority="high">
-    <link rel="preload" as="fetch" href="assets/nikitka-ai-pro-product.glb?v=20260522-premium-v2" type="model/gltf-binary" crossorigin>
-    <link rel="stylesheet" href="style.css?v=20260522-premium-glb-v6">
+    <link rel="preload" as="fetch" href="assets/nikitka-ai-pro-product.glb?v=20260522-teardown-v1" type="model/gltf-binary" crossorigin>
+    <link rel="stylesheet" href="style.css?v=20260522-teardown-v1">
     <script type="importmap">
     {
         "imports": {
@@ -321,14 +321,14 @@
                 <!-- Premium GLB product anatomy viewer -->
                 <div id="product-3d" class="exploded-panel glass-card">
                     <div class="exploded-copy-block">
-                        <h3 class="exploded-title">Интерактивная Нейро-Анатомия</h3>
+                        <h3 class="exploded-title">Инженерная 3D-Анатомия</h3>
                         <p class="exploded-copy">
-                            Локальная GLB-модель Nikitka AI PRO: кейс, крышка, два вкладыша, OLED-панель и световые детали вращаются в браузере и раскрываются слоями.
+                            Собери и разбери кейс Nikitka AI PRO: крышка, шарнир, батареи, AI-плата, контакты и драйвер наушника раскрываются как один понятный механизм.
                         </p>
 
                         <div class="anatomy-control-strip">
                             <button id="anatomy-scan-toggle" class="anatomy-scan-btn" type="button" aria-pressed="false">
-                                Раскрыть слои
+                                Разобрать кейс
                             </button>
                             <span id="anatomy-readout" class="anatomy-readout" aria-live="polite">Загрузка 3D-модели</span>
                         </div>
@@ -337,12 +337,20 @@
                             <span id="anatomy-progress-fill"></span>
                         </div>
 
+                        <div class="anatomy-stage-rail" aria-label="Стадии сборки кейса">
+                            <button type="button" class="is-active" data-viewer-stage="assembled"><b>01</b> Собран</button>
+                            <button type="button" data-viewer-stage="lid"><b>02</b> Крышка</button>
+                            <button type="button" data-viewer-stage="internals"><b>03</b> Внутри</button>
+                            <button type="button" data-viewer-stage="signal"><b>04</b> Сигнал</button>
+                        </div>
+
                         <div class="anatomy-proof-line" aria-label="Ключевые слои">
-                            <button type="button" data-viewer-part="case"><b>01</b> Кейс</button>
-                            <button type="button" data-viewer-part="buds"><b>02</b> Вкладыши</button>
-                            <button type="button" data-viewer-part="ai"><b>03</b> AI/OLED</button>
-                            <button type="button" data-viewer-part="battery"><b>04</b> Батарея</button>
-                            <button type="button" data-viewer-part="sensor"><b>05</b> Сенсор</button>
+                            <button type="button" data-viewer-part="case"><b>01</b> Корпус</button>
+                            <button type="button" data-viewer-part="lid"><b>02</b> Шарнир</button>
+                            <button type="button" data-viewer-part="battery"><b>03</b> Питание</button>
+                            <button type="button" data-viewer-part="ai"><b>04</b> AI-плата</button>
+                            <button type="button" data-viewer-part="buds"><b>05</b> Драйвер</button>
+                            <button type="button" data-viewer-part="signal"><b>06</b> Сигнал</button>
                         </div>
                     </div>
                     
@@ -353,6 +361,11 @@
                             <div class="anatomy-vignette" aria-hidden="true"></div>
                             <div class="anatomy-scan-beam" aria-hidden="true"></div>
                             <span class="anatomy-orbit-hint">REAL GLB 3D</span>
+                            <div id="anatomy-stage-caption" class="anatomy-stage-caption" aria-live="polite">
+                                <span>assembly state</span>
+                                <strong>Собранный кейс</strong>
+                                <p>Закрытый прозрачный корпус держит вкладыши, батареи, OLED и плату в одном модуле.</p>
+                            </div>
                             <span id="model-loading" class="model-loading">Загружаю локальную 3D-модель</span>
                         </div>
                     </div>
@@ -885,7 +898,7 @@
         </div>
     </footer>
 
-    <script type="module" src="three-anatomy.js?v=20260522-premium-glb-v6"></script>
-    <script src="app.js?v=20260522-premium-glb-v6"></script>
+    <script type="module" src="three-anatomy.js?v=20260522-teardown-v1"></script>
+    <script src="app.js?v=20260522-teardown-v1"></script>
 </body>
 </html>

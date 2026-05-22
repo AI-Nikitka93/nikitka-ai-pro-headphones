@@ -1035,7 +1035,9 @@ section {
     pointer-events: none;
 }
 
-.exploded-viewer[data-phase="open"] .anatomy-scan-beam {
+.exploded-viewer[data-phase="lid"] .anatomy-scan-beam,
+.exploded-viewer[data-phase="internals"] .anatomy-scan-beam,
+.exploded-viewer[data-phase="signal"] .anatomy-scan-beam {
     opacity: 0.92;
     transform: skewX(-8deg) translateX(90px);
 }
@@ -1131,7 +1133,7 @@ section {
     inset: 0;
     transform: scaleX(0);
     transform-origin: left center;
-    background: linear-gradient(90deg, var(--secondary), var(--accent));
+    background: linear-gradient(90deg, var(--secondary), var(--accent-purple));
     box-shadow: 0 0 18px rgba(0, 240, 255, 0.45);
 }
 
@@ -1143,6 +1145,45 @@ section {
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.03);
+}
+
+.anatomy-stage-rail {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+}
+
+.anatomy-stage-rail button {
+    appearance: none;
+    min-height: 46px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.035);
+    color: rgba(255, 255, 255, 0.7);
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: border-color 0.22s ease, background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+}
+
+.anatomy-stage-rail b {
+    display: block;
+    margin-bottom: 0.12rem;
+    color: var(--secondary);
+    font-size: 0.62rem;
+}
+
+.anatomy-stage-rail button:hover,
+.anatomy-stage-rail button.is-active {
+    border-color: rgba(0, 240, 255, 0.48);
+    color: #fff;
+    background:
+        linear-gradient(135deg, rgba(0, 240, 255, 0.14), rgba(138, 43, 226, 0.12)),
+        rgba(5, 5, 13, 0.82);
+    box-shadow: 0 0 22px rgba(0, 240, 255, 0.12);
+    transform: translateY(-1px);
 }
 
 .anatomy-proof-line {
@@ -1180,6 +1221,44 @@ section {
     color: var(--secondary);
     font-size: 0.64rem;
     margin-right: 0.35rem;
+}
+
+.anatomy-stage-caption {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 7;
+    width: min(330px, calc(100% - 2rem));
+    padding: 0.78rem 0.88rem;
+    border: 1px solid rgba(0, 240, 255, 0.18);
+    border-radius: 8px;
+    background: rgba(3, 5, 12, 0.66);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.22);
+    pointer-events: none;
+}
+
+.anatomy-stage-caption span {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: var(--secondary);
+    font-size: 0.58rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.anatomy-stage-caption strong {
+    display: block;
+    color: #fff;
+    font-size: 0.88rem;
+    line-height: 1.2;
+}
+
+.anatomy-stage-caption p {
+    margin-top: 0.28rem;
+    color: rgba(230, 235, 245, 0.72);
+    font-size: 0.7rem;
+    line-height: 1.45;
 }
 
 /* Cinematic Inside Product Section */
@@ -3178,6 +3257,9 @@ footer {
     .anatomy-readout {
         display: block;
     }
+    .anatomy-stage-rail {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
     .anatomy-orbit-hint {
         top: 0.75rem;
         right: 0.75rem;
@@ -3191,6 +3273,19 @@ footer {
         right: 0.75rem;
         bottom: 0.75rem;
         max-width: none;
+    }
+    .anatomy-stage-caption {
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: 0.75rem;
+        width: auto;
+        padding: 0.66rem 0.72rem;
+    }
+    .anatomy-stage-caption strong {
+        font-size: 0.8rem;
+    }
+    .anatomy-stage-caption p {
+        display: none;
     }
     .tech-grid {
         grid-template-columns: 1fr;
