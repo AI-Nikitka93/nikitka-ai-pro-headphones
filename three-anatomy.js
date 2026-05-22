@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const MODEL_URL = 'assets/nikitka-ai-pro-product.glb?v=20260522-teardown-v1';
+const MODEL_URL = 'assets/nikitka-ai-pro-product.glb?v=20260522-teardown-v8';
 
 const ready = (callback) => {
     if (document.readyState === 'loading') {
@@ -29,7 +29,7 @@ const stageMeta = {
         part: 'case',
         camera: 'case',
         progress: 0,
-        caption: 'Закрытый прозрачный корпус держит вкладыши, батареи, OLED и плату в одном модуле.'
+        caption: 'Вкладыши сидят в посадочных колодцах под затемненной крышкой, как в реальном зарядном кейсе.'
     },
     lid: {
         label: 'Открываем крышку',
@@ -113,7 +113,7 @@ ready(() => {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 0.96;
 
     const scene = new THREE.Scene();
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -169,18 +169,18 @@ ready(() => {
         cameraPresetFrames = reducedMotion ? 1 : 170;
     };
 
-    scene.add(new THREE.AmbientLight(0x8aa6e8, 0.42));
+    scene.add(new THREE.AmbientLight(0x8aa6e8, 0.36));
 
-    const key = new THREE.DirectionalLight(0xffffff, 2.85);
+    const key = new THREE.DirectionalLight(0xffffff, 2.95);
     key.position.set(4.2, 5.4, 5.0);
     scene.add(key);
 
-    const cyan = new THREE.PointLight(0x00f0ff, 4.2, 8.5);
-    cyan.position.set(-2.4, 1.9, 2.2);
+    const cyan = new THREE.PointLight(0x00f0ff, 3.25, 8.0);
+    cyan.position.set(-2.7, 2.05, 2.4);
     scene.add(cyan);
 
-    const purple = new THREE.PointLight(0x8a2be2, 4.2, 8.5);
-    purple.position.set(2.7, 0.7, 2.9);
+    const purple = new THREE.PointLight(0x6a4cff, 0.0, 6.0);
+    purple.position.set(2.85, 0.35, 2.6);
     scene.add(purple);
 
     const frontFill = new THREE.DirectionalLight(0xd9f7ff, 1.5);
@@ -232,34 +232,34 @@ ready(() => {
         if (stage === 'assembled') return zeroVector;
 
         if (stage === 'lid') {
-            if (isLid) return new THREE.Vector3(0, 0.72, -0.5);
-            if (isHinge) return new THREE.Vector3(0, 0.18, -0.1);
-            if (isTopShell) return new THREE.Vector3(0, 0.12, -0.03);
+            if (isLid) return new THREE.Vector3(0, 0.68, -0.52);
+            if (isHinge) return new THREE.Vector3(0, 0.12, -0.05);
+            if (isTopShell) return new THREE.Vector3(0, 0.1, -0.02);
             return zeroVector;
         }
 
         if (stage === 'internals') {
-            if (isLid) return new THREE.Vector3(0, 1.08, -0.68);
-            if (isTopShell) return new THREE.Vector3(0, 0.42, -0.08);
-            if (isBatteryCell) return new THREE.Vector3(side * 0.18, 0.52, 0.44);
-            if (isBatteryRoute) return new THREE.Vector3(side * 0.08, 0.3, 0.32);
-            if (isBoard) return new THREE.Vector3(0, 0.72, 0.48);
-            if (isEarbud) return new THREE.Vector3(side * 0.3, 0.42, 0.08);
-            if (lower.includes('hologram')) return new THREE.Vector3(0, 0.62, 0.04);
-            if (lower.includes('case_base')) return new THREE.Vector3(0, -0.08, 0);
+            if (isLid) return new THREE.Vector3(0, 0.82, -0.58);
+            if (isTopShell) return new THREE.Vector3(0, 0.22, -0.04);
+            if (isBatteryCell) return new THREE.Vector3(side * 0.16, 0.32, 0.28);
+            if (isBatteryRoute) return new THREE.Vector3(side * 0.06, 0.18, 0.22);
+            if (isBoard) return new THREE.Vector3(0, 0.48, 0.3);
+            if (isEarbud) return new THREE.Vector3(side * 0.28, 0.86, 0.04);
+            if (lower.includes('hologram')) return new THREE.Vector3(0, 0.38, 0.03);
+            if (lower.includes('case_base')) return new THREE.Vector3(0, -0.04, 0);
             return zeroVector;
         }
 
         if (stage === 'signal') {
-            if (isLid) return new THREE.Vector3(0, 1.0, -0.68);
-            if (isTopShell) return new THREE.Vector3(0, 0.34, -0.08);
-            if (isBoard) return new THREE.Vector3(0, 0.62, 0.42);
-            if (isBatteryCell) return new THREE.Vector3(side * 0.14, 0.42, 0.34);
-            if (isBatteryRoute) return new THREE.Vector3(side * 0.08, 0.36, 0.34);
-            if (isEarbud) return new THREE.Vector3(side * 0.42, 0.52, 0.08);
-            if (isDriver) return new THREE.Vector3(side * 0.55, 0.68, 0.2);
-            if (isSignal) return new THREE.Vector3(side * 0.12, 0.58, 0.26);
-            if (lower.includes('hologram')) return new THREE.Vector3(0, 0.7, 0.02);
+            if (isLid) return new THREE.Vector3(0, 0.82, -0.58);
+            if (isTopShell) return new THREE.Vector3(0, 0.22, -0.05);
+            if (isBoard) return new THREE.Vector3(0, 0.42, 0.28);
+            if (isBatteryCell) return new THREE.Vector3(side * 0.12, 0.26, 0.24);
+            if (isBatteryRoute) return new THREE.Vector3(side * 0.06, 0.22, 0.24);
+            if (isEarbud) return new THREE.Vector3(side * 0.34, 0.94, 0.05);
+            if (isDriver) return new THREE.Vector3(side * 0.42, 1.02, 0.12);
+            if (isSignal) return new THREE.Vector3(side * 0.22, 0.76, 0.12);
+            if (lower.includes('hologram')) return new THREE.Vector3(0, 0.44, 0.02);
         }
 
         return zeroVector;
@@ -270,11 +270,11 @@ ready(() => {
         const side = sideOf(lower);
         const isLid = lower.includes('case_lid') || lower.includes('lid_') || lower.includes('hinge_frame') || lower.includes('magnetic_lip');
         if (stage === 'assembled') return zeroEuler;
-        if (isLid) return new THREE.Euler(-0.98, 0, 0);
-        if (lower.includes('battery_cell')) return new THREE.Euler(0, 0, side * 0.09);
+        if (isLid) return new THREE.Euler(-0.68, 0, 0);
+        if (lower.includes('battery_cell')) return new THREE.Euler(0, 0, side * 0.055);
         if (lower.includes('ai_core') || lower.includes('board')) return new THREE.Euler(0.06, 0, -0.02);
-        if (lower.includes('left_floating_earbud')) return new THREE.Euler(-0.05, -0.08, -0.14);
-        if (lower.includes('right_docked_earbud')) return new THREE.Euler(-0.04, 0.06, 0.14);
+        if (lower.includes('left_docked_earbud')) return new THREE.Euler(-0.08, -0.06, -0.14);
+        if (lower.includes('right_docked_earbud')) return new THREE.Euler(-0.08, 0.06, 0.14);
         if (lower.includes('sound_wavefront')) return new THREE.Euler(0.04, 0, side * 0.08);
         return zeroEuler;
     };
@@ -295,23 +295,40 @@ ready(() => {
         }
     };
 
-    const tuneMaterial = (mat) => {
+    const tuneMaterial = (mat, meshName = '') => {
         const name = (mat.name || '').toLowerCase();
+        const objectName = meshName.toLowerCase();
         if (name.includes('smoked') || name.includes('transparent')) {
-            mat.color.set(0x07101d);
+            mat.color.set(0x01060c);
             mat.transparent = true;
-            mat.opacity = name.includes('lid') ? 0.34 : 0.3;
+            if (objectName.includes('case_lid')) {
+                mat.opacity = 0.72;
+            } else if (objectName.includes('case_top')) {
+                mat.opacity = 0.62;
+            } else if (objectName.includes('sensor_shell')) {
+                mat.opacity = 0.16;
+            } else {
+                mat.opacity = 0.42;
+            }
             mat.depthWrite = false;
             mat.metalness = 0.12;
             mat.roughness = 0.08;
-            mat.envMapIntensity = 1.45;
+            mat.envMapIntensity = 0.72;
             mat.side = THREE.DoubleSide;
         }
         if (name.includes('obsidian') || name.includes('ceramic')) {
-            mat.color.set(0x04050c);
-            mat.metalness = 0.68;
-            mat.roughness = 0.1;
-            mat.envMapIntensity = 2.35;
+            mat.color.set(0x020309);
+            mat.metalness = 0.62;
+            mat.roughness = 0.16;
+            mat.envMapIntensity = 1.95;
+        }
+        if (objectName.includes('case_base') || objectName.includes('case_front_oled')) {
+            mat.color.set(0x020309);
+            mat.transparent = false;
+            mat.opacity = 1;
+            mat.metalness = 0.62;
+            mat.roughness = 0.18;
+            mat.envMapIntensity = 1.35;
         }
         if (name.includes('oled') || name.includes('panel')) {
             mat.color.set(0x01030b);
@@ -337,12 +354,12 @@ ready(() => {
         if (name.includes('cyan')) {
             mat.color.set(0x00f0ff);
             if (mat.emissive) mat.emissive.set(0x00c9ff);
-            mat.emissiveIntensity = Math.max(mat.emissiveIntensity || 0, 2.35);
+            mat.emissiveIntensity = Math.max(mat.emissiveIntensity || 0, 1.55);
         }
         if (name.includes('violet') || name.includes('purple')) {
-            mat.color.set(0x9b5cff);
-            if (mat.emissive) mat.emissive.set(0x7c2cff);
-            mat.emissiveIntensity = Math.max(mat.emissiveIntensity || 0, 2.65);
+            mat.color.set(0x5547cc);
+            if (mat.emissive) mat.emissive.set(0x4f3fc3);
+            mat.emissiveIntensity = Math.max(mat.emissiveIntensity || 0, 0.72);
         }
     };
 
@@ -358,7 +375,7 @@ ready(() => {
         mesh.userData.baseOpacity = [];
 
         eachMaterial(mesh, (mat, index) => {
-            tuneMaterial(mat);
+            tuneMaterial(mat, mesh.name);
             if (categories.includes('signal')) {
                 mat.transparent = true;
                 mat.depthWrite = false;
@@ -374,7 +391,7 @@ ready(() => {
     const setCaption = () => {
         if (!caption) return;
         const meta = stageMeta[activeStage] || stageMeta.assembled;
-        caption.innerHTML = `<span>assembly state</span><strong>${meta.label}</strong><p>${meta.caption}</p>`;
+        caption.innerHTML = `<span>сборка</span><strong>${meta.label}</strong><p>${meta.caption}</p>`;
     };
 
     const setReadout = () => {
@@ -396,7 +413,7 @@ ready(() => {
         });
         button.classList.toggle('is-open', activeStage !== 'assembled');
         button.setAttribute('aria-pressed', String(activeStage !== 'assembled'));
-        button.textContent = activeStage === 'assembled' ? 'Разобрать кейс' : 'Собрать кейс';
+        button.textContent = activeStage === 'assembled' ? 'Открыть кейс' : 'Собрать кейс';
     };
 
     const setStage = (stage, options = {}) => {
@@ -499,6 +516,15 @@ ready(() => {
         const baseOpacity = mesh.userData.baseOpacity[matIndex] ?? 1;
         const isSignal = categories.includes('signal');
         const isTransparentSurface = baseOpacity < 0.98;
+        const lowerName = mesh.name.toLowerCase();
+        if (activeStage === 'assembled' && categories.includes('buds')) {
+            return isTransparentSurface ? Math.min(baseOpacity, 0.2) : 0.32;
+        }
+        if (lowerName.includes('case_lid') || lowerName.includes('case_top_smoked')) {
+            if (activeStage === 'assembled') return lowerName.includes('case_lid') ? 0.82 : 0.68;
+            if (activeStage === 'lid') return lowerName.includes('case_lid') ? 0.32 : 0.22;
+            return lowerName.includes('case_lid') ? 0.24 : 0.16;
+        }
         if (activeStage === 'assembled' && isSignal) return 0.04;
         if (activeStage !== 'signal' && isSignal) return 0.12;
         if (activeStage === 'signal' && isSignal) return Math.max(baseOpacity, 0.88);
@@ -531,6 +557,26 @@ ready(() => {
 
             eachMaterial(mesh, (mat, index) => {
                 const materialName = (mat.name || '').toLowerCase();
+                const closedCover = activeStage === 'assembled' && (
+                    lowerName.includes('case_lid') ||
+                    lowerName.includes('case_top_smoked')
+                );
+                if (lowerName.includes('case_base') || lowerName.includes('case_front_oled')) {
+                    if (mat.color) mat.color.set(0x020309);
+                    mat.transparent = false;
+                    mat.depthWrite = true;
+                    mat.opacity = 1;
+                    mat.needsUpdate = true;
+                    return;
+                }
+                if (closedCover) {
+                    if (mat.color) mat.color.set(0x02060b);
+                    mat.transparent = false;
+                    mat.depthWrite = true;
+                    mat.opacity += (1 - mat.opacity) * 0.3;
+                    mat.needsUpdate = true;
+                    return;
+                }
                 const baseIntensity = mesh.userData.baseEmissiveIntensity[index] || 0;
                 const canGlow = baseIntensity > 0.15 || materialName.includes('cyan') || materialName.includes('violet') || materialName.includes('purple');
                 const shouldGlow = (isActive && canGlow) || (activeStage === 'signal' && isSignal);
@@ -554,7 +600,7 @@ ready(() => {
                 }
             });
 
-            mesh.visible = !(activeStage === 'assembled' && categories.includes('signal'));
+            mesh.visible = !(activeStage !== 'signal' && categories.includes('signal'));
         });
 
         if (progressFill) {

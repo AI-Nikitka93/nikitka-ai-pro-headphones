@@ -128,13 +128,13 @@ def add_text(name, text, location, rotation, size, mat, align="CENTER"):
     return obj
 
 
-def capsule_between(name, start, end, radius, mat):
+def capsule_between(name, start, end, radius, mat, *, caps=True, vertices=48):
     start = Vector(start)
     end = Vector(end)
     midpoint = (start + end) / 2
     direction = end - start
     length = direction.length
-    bpy.ops.mesh.primitive_cylinder_add(vertices=48, radius=radius, depth=length, location=midpoint)
+    bpy.ops.mesh.primitive_cylinder_add(vertices=vertices, radius=radius, depth=length, location=midpoint)
     obj = bpy.context.object
     obj.name = name
     quat = direction.to_track_quat("Z", "Y")
@@ -142,8 +142,9 @@ def capsule_between(name, start, end, radius, mat):
     assign(obj, mat)
     shade(obj)
     bevel(obj, radius * 0.18, 10)
-    uv_sphere(f"{name}_cap_a", start, (radius, radius, radius), mat, segments=32, rings=16)
-    uv_sphere(f"{name}_cap_b", end, (radius, radius, radius), mat, segments=32, rings=16)
+    if caps:
+        uv_sphere(f"{name}_cap_a", start, (radius, radius, radius), mat, segments=32, rings=16)
+        uv_sphere(f"{name}_cap_b", end, (radius, radius, radius), mat, segments=32, rings=16)
     return obj
 
 
@@ -156,24 +157,24 @@ def create_earbud(prefix, x, y, z, side=1, floating=False):
     cyl(f"{prefix}_micro_driver_diaphragm", (x - side * 0.2, y - 0.294, z + 0.06), 0.16, 0.025, cyan_emit, vertices=64, rotation=(math.pi / 2, 0, 0), scale=(1.1, 0.78, 0.18))
 
     stem_top = (x + side * 0.2, y - 0.08, z - 0.26)
-    stem_bottom = (x + side * 0.46, y - 0.12, z - 1.17)
+    stem_bottom = (x + side * 0.42, y - 0.12, z - 0.86)
     capsule_between(f"{prefix}_polished_stem", stem_top, stem_bottom, 0.13, glossy_black)
-    capsule_between(f"{prefix}_stem_inner_light_pipe", (stem_top[0] + side * 0.035, stem_top[1] - 0.015, stem_top[2] - 0.17), (stem_bottom[0] + side * 0.02, stem_bottom[1] - 0.015, stem_bottom[2] + 0.2), 0.022, purple_emit)
+    capsule_between(f"{prefix}_stem_inner_light_pipe", (stem_top[0] + side * 0.035, stem_top[1] - 0.015, stem_top[2] - 0.17), (stem_bottom[0] + side * 0.02, stem_bottom[1] - 0.015, stem_bottom[2] + 0.2), 0.016, cyan_emit)
     capsule_between(f"{prefix}_titanium_stem_edge", (stem_top[0] - side * 0.075, stem_top[1] - 0.004, stem_top[2] - 0.12), (stem_bottom[0] - side * 0.056, stem_bottom[1] - 0.006, stem_bottom[2] + 0.26), 0.018, metal)
 
-    sensor = cyl(f"{prefix}_fingerprint_sensor_disc", (x + side * 0.12, y - 0.27, z + 0.18), 0.17, 0.035, purple_emit, vertices=64, rotation=(math.pi / 2, 0, 0), scale=(1.0, 1.0, 0.35))
+    sensor = cyl(f"{prefix}_fingerprint_sensor_disc", (x + side * 0.12, y - 0.27, z + 0.18), 0.16, 0.03, dark_panel, vertices=64, rotation=(math.pi / 2, 0, 0), scale=(1.0, 1.0, 0.35))
     for i, r in enumerate((0.07, 0.11, 0.145)):
-        ring = torus(f"{prefix}_fingerprint_ring_{i}", (x + side * 0.12, y - 0.292, z + 0.18), r, 0.006, purple_emit, rotation=(math.pi / 2, 0, 0), scale=(1, 1, 0.25))
+        ring = torus(f"{prefix}_fingerprint_ring_{i}", (x + side * 0.12, y - 0.292, z + 0.18), r, 0.004, cyan_emit, rotation=(math.pi / 2, 0, 0), scale=(1, 1, 0.25))
         ring.scale.x = 0.8 + i * 0.08
     cyan = cyl(f"{prefix}_mic_port_cyan", (x + side * 0.4, y - 0.2, z - 0.84), 0.035, 0.014, cyan_emit, vertices=28, rotation=(math.pi / 2, 0, 0))
     cyl(f"{prefix}_vented_driver_mesh", (x - side * 0.2, y - 0.318, z + 0.06), 0.115, 0.012, dark_panel, vertices=48, rotation=(math.pi / 2, 0, 0), scale=(1.1, 0.78, 0.16))
-    for i, wave_radius in enumerate((0.31, 0.44, 0.57)):
+    for i, wave_radius in enumerate((0.24, 0.34, 0.46)):
         wave = torus(
             f"{prefix}_sound_wavefront_ring_{i}",
-            (x - side * (0.26 + i * 0.05), y - 0.35 - i * 0.035, z + 0.06),
+            (x - side * (0.24 + i * 0.035), y - 0.34 - i * 0.03, z + 0.06),
             wave_radius,
-            0.007,
-            cyan_emit if i % 2 == 0 else purple_emit,
+            0.0045,
+            cyan_emit,
             rotation=(math.pi / 2, 0, 0),
             scale=(1.08, 0.72, 0.16),
         )
@@ -217,16 +218,26 @@ def add_case_internals():
     torus("case_bottom_qi_charging_coil_inner", (0, 0.34, 0.34), 0.52, 0.014, copper, scale=(1.15, 0.72, 0.08))
     cube("case_flex_ribbon_to_oled", (0, -0.62, 0.64), (0.22, 0.84, 0.025), copper, 0.012, 4)
 
-    hinge = cyl("case_precision_hinge_titanium", (0, 1.04, 1.12), 0.055, 4.65, metal, vertices=48, rotation=(0, math.pi / 2, 0), scale=(1, 1, 1))
-    hinge.rotation_euler[0] = math.radians(-12)
+    for side in (-1, 1):
+        hinge = cyl(
+            f"case_precision_hinge_barrel_{side}",
+            (side * 2.03, 1.04, 1.12),
+            0.048,
+            0.56,
+            metal,
+            vertices=40,
+            rotation=(0, math.pi / 2, 0),
+            scale=(1, 1, 1),
+        )
+        hinge.rotation_euler[0] = math.radians(-8)
 
 
 def add_signal_paths():
-    capsule_between("signal_path_ai_to_left_charge_pin", (-0.22, 0.0, 0.86), (-1.45, -0.13, 1.08), 0.012, cyan_emit)
-    capsule_between("signal_path_ai_to_right_charge_pin", (0.22, 0.0, 0.86), (1.45, -0.13, 1.08), 0.012, cyan_emit)
-    capsule_between("signal_path_left_pin_to_driver", (-1.45, -0.13, 1.08), (-1.95, -0.33, 2.31), 0.014, cyan_emit)
-    capsule_between("signal_path_right_pin_to_driver", (1.45, -0.13, 1.08), (1.15, -0.36, 2.16), 0.014, cyan_emit)
-    capsule_between("signal_path_neural_feedback_loop", (-0.2, 0.04, 0.98), (0.2, 0.04, 0.98), 0.01, purple_emit)
+    capsule_between("signal_path_ai_to_left_charge_pin", (-0.22, 0.0, 0.86), (-1.45, -0.13, 1.08), 0.006, cyan_emit, caps=False, vertices=24)
+    capsule_between("signal_path_ai_to_right_charge_pin", (0.22, 0.0, 0.86), (1.45, -0.13, 1.08), 0.006, cyan_emit, caps=False, vertices=24)
+    capsule_between("signal_path_left_pin_to_driver", (-1.45, -0.13, 1.08), (-1.25, -0.43, 1.3), 0.007, cyan_emit, caps=False, vertices=24)
+    capsule_between("signal_path_right_pin_to_driver", (1.45, -0.13, 1.08), (1.25, -0.43, 1.3), 0.007, cyan_emit, caps=False, vertices=24)
+    capsule_between("signal_path_neural_feedback_loop", (-0.2, 0.04, 0.98), (0.2, 0.04, 0.98), 0.005, purple_emit, caps=False, vertices=24)
     for obj in bpy.context.scene.objects:
         if obj.name.startswith("signal_path_"):
             obj["nikitka_stage"] = "signal"
@@ -236,28 +247,28 @@ def create_scene():
     reset_scene()
 
     global glossy_black, smoked_glass, rubber, metal, cyan_emit, purple_emit, white_emit, dark_panel
-    glossy_black = material("obsidian black ceramic", (0.005, 0.006, 0.011, 1), metallic=0.55, roughness=0.14)
-    smoked_glass = material("smoked transparent polycarbonate", (0.08, 0.15, 0.28, 0.34), metallic=0.05, roughness=0.08, alpha=0.36)
+    glossy_black = material("obsidian black ceramic", (0.004, 0.005, 0.01, 1), metallic=0.52, roughness=0.2)
+    smoked_glass = material("smoked transparent polycarbonate", (0.012, 0.032, 0.048, 0.46), metallic=0.04, roughness=0.16, alpha=0.46)
     rubber = material("soft graphite silicone", (0.015, 0.016, 0.025, 1), metallic=0.0, roughness=0.58)
     metal = material("polished dark titanium", (0.48, 0.52, 0.62, 1), metallic=0.88, roughness=0.16)
     dark_panel = material("deep OLED glass", (0.01, 0.012, 0.025, 1), metallic=0.25, roughness=0.08)
-    cyan_emit = material("cyan active light", (0.0, 0.9, 1.0, 1), metallic=0.15, roughness=0.18, emission=(0.0, 0.95, 1.0, 1), strength=2.8)
-    purple_emit = material("violet neural light", (0.45, 0.12, 1.0, 1), metallic=0.1, roughness=0.18, emission=(0.52, 0.18, 1.0, 1), strength=3.5)
+    cyan_emit = material("cyan active light", (0.0, 0.9, 1.0, 1), metallic=0.12, roughness=0.2, emission=(0.0, 0.9, 1.0, 1), strength=2.2)
+    purple_emit = material("violet neural light", (0.22, 0.18, 0.62, 1), metallic=0.08, roughness=0.24, emission=(0.18, 0.14, 0.56, 1), strength=0.7)
     white_emit = material("soft white micro text", (0.8, 0.88, 1.0, 1), metallic=0, roughness=0.2, emission=(0.7, 0.82, 1.0, 1), strength=1.2)
 
     base = cube("case_base_rounded_translucent_black", (0, 0, 0.34), (5.25, 2.35, 0.86), glossy_black, 0.18, 14)
-    case_top_glass = cube("case_top_smoked_clear_shell", (0, -0.04, 0.88), (5.0, 2.08, 0.18), smoked_glass, 0.18, 14)
+    case_top_glass = cube("case_top_smoked_clear_shell", (0, -0.04, 0.95), (5.0, 2.08, 0.24), smoked_glass, 0.18, 14)
     front_panel = cube("case_front_oled_panel", (0, -1.19, 0.4), (2.0, 0.08, 0.42), dark_panel, 0.07, 8)
     add_text("case_front_brand_text", "NIKITKA AI PRO", (0, -1.238, 0.46), (math.radians(90), 0, 0), 0.18, white_emit)
-    add_text("case_front_battery_text", "100%", (-0.55, -1.242, 0.24), (math.radians(90), 0, 0), 0.105, purple_emit)
+    add_text("case_front_battery_text", "100%", (-0.55, -1.242, 0.24), (math.radians(90), 0, 0), 0.105, cyan_emit)
     capsule_between("case_front_cyan_light_blade", (-2.22, -1.255, 0.66), (2.22, -1.255, 0.66), 0.015, cyan_emit)
-    capsule_between("case_rear_precision_light_seam", (-2.28, 1.03, 0.92), (2.28, 1.03, 0.92), 0.013, purple_emit)
+    capsule_between("case_rear_precision_light_seam", (-2.28, 1.03, 0.92), (2.28, 1.03, 0.92), 0.01, cyan_emit)
 
-    for i in range(10):
-        cube(f"case_battery_bar_{i:02d}", (-0.18 + i * 0.075, -1.25, 0.24), (0.044, 0.018, 0.13), purple_emit, 0.01, 2)
+    for i in range(7):
+        cube(f"case_battery_bar_{i:02d}", (-0.14 + i * 0.07, -1.25, 0.24), (0.038, 0.016, 0.11), cyan_emit, 0.01, 2)
 
     for side in (-1, 1):
-        torus(f"case_well_neon_ring_{side}", (side * 1.45, -0.15, 1.0), 0.55, 0.035, purple_emit, rotation=(0, 0, 0), scale=(1.26, 0.82, 0.12))
+        torus(f"case_well_precision_trim_{side}", (side * 1.45, -0.15, 1.0), 0.55, 0.018, metal, rotation=(0, 0, 0), scale=(1.26, 0.82, 0.12))
         cyl(f"case_well_dark_cavity_{side}", (side * 1.45, -0.15, 0.95), 0.5, 0.08, dark_panel, vertices=96, scale=(1.26, 0.82, 0.12))
         cyl(f"case_charge_pin_{side}_a", (side * 1.22, -0.16, 1.04), 0.035, 0.035, cyan_emit, vertices=24)
         cyl(f"case_charge_pin_{side}_b", (side * 1.68, -0.16, 1.04), 0.035, 0.035, cyan_emit, vertices=24)
@@ -265,26 +276,20 @@ def create_scene():
 
     add_case_internals()
 
-    lid = cube("case_lid_outer_smoked_glass_closed", (0, 0.02, 1.34), (5.08, 2.18, 0.16), smoked_glass, 0.16, 14)
-    cube("case_lid_titanium_hinge_frame", (0, 1.12, 1.22), (4.9, 0.08, 0.16), metal, 0.04, 7)
-    cube("case_lid_front_magnetic_lip", (0, -1.07, 1.22), (4.7, 0.07, 0.12), metal, 0.035, 6)
-    lid_panel = cube("case_lid_inner_adaptive_sound_display", (0, -0.12, 1.43), (2.72, 0.84, 0.045), dark_panel, 0.06, 8)
-    add_text("case_lid_ui_title", "NIKITKA AI PRO", (0, -0.2, 1.48), (0, 0, 0), 0.18, white_emit)
-    add_text("case_lid_ui_adaptive", "ADAPTIVE SOUND  ON", (0, -0.2, 1.6), (0, 0, 0), 0.082, cyan_emit)
-    add_text("case_lid_ui_specs", "96 kHz / 24 bit", (0, -0.2, 1.69), (0, 0, 0), 0.078, purple_emit)
+    lid = cube("case_lid_outer_smoked_glass_closed", (0, 0.02, 1.54), (5.08, 2.18, 0.54), smoked_glass, 0.2, 16)
+    for side in (-1, 1):
+        cube(f"case_lid_compact_hinge_socket_{side}", (side * 2.04, 1.08, 1.22), (0.34, 0.08, 0.12), metal, 0.035, 6)
+        cube(f"case_lid_magnetic_pin_{side}", (side * 2.1, -1.03, 1.2), (0.18, 0.05, 0.07), metal, 0.025, 5)
+    lid_panel = cube("case_lid_inner_adaptive_sound_display", (0, -0.12, 1.76), (2.72, 0.84, 0.045), dark_panel, 0.06, 8)
+    add_text("case_lid_ui_title", "NIKITKA AI PRO", (0, -0.2, 1.81), (0, 0, 0), 0.18, white_emit)
+    add_text("case_lid_ui_adaptive", "ADAPTIVE SOUND  ON", (0, -0.2, 1.93), (0, 0, 0), 0.082, cyan_emit)
+    add_text("case_lid_ui_specs", "96 kHz / 24 bit", (0, -0.2, 2.02), (0, 0, 0), 0.078, cyan_emit)
 
-    torus("hologram_wave_base", (0, -0.2, 1.18), 0.43, 0.018, cyan_emit, scale=(1.3, 1.3, 0.14))
-    for i, h in enumerate([0.18, 0.32, 0.48, 0.64, 0.38, 0.26, 0.44, 0.28, 0.16]):
-        x = -0.42 + i * 0.105
-        capsule_between(f"hologram_wave_bar_{i:02d}", (x, -0.2, 1.25), (x, -0.2, 1.25 + h), 0.015, purple_emit)
+    cube("ai_core_status_light_bar", (0, -0.2, 1.18), (0.82, 0.028, 0.035), cyan_emit, 0.012, 4)
 
-    create_earbud("left_floating_earbud", -1.75, -0.14, 2.25, side=-1, floating=True)
-    create_earbud("right_docked_earbud", 1.35, -0.18, 2.1, side=1, floating=False)
+    create_earbud("left_docked_earbud", -1.45, -0.16, 1.24, side=-1, floating=False)
+    create_earbud("right_docked_earbud", 1.45, -0.16, 1.24, side=1, floating=False)
     add_signal_paths()
-
-    # Accent arcs around the whole product.
-    torus("product_floor_neon_orbit", (0, -0.08, -0.08), 2.35, 0.012, purple_emit, scale=(1.15, 0.5, 0.05))
-    torus("product_rear_cyan_orbit", (0, 0.45, 1.5), 2.3, 0.008, cyan_emit, rotation=(math.radians(78), 0, 0), scale=(1.05, 0.52, 0.05))
 
     # Lighting and camera.
     bpy.ops.object.light_add(type="AREA", location=(-3.3, -4.2, 5.1))
@@ -295,9 +300,9 @@ def create_scene():
 
     bpy.ops.object.light_add(type="POINT", location=(3.1, -2.6, 2.7))
     rim = bpy.context.object
-    rim.name = "violet_rim_light"
-    rim.data.color = (0.45, 0.15, 1.0)
-    rim.data.energy = 270
+    rim.name = "soft_blue_rim_light"
+    rim.data.color = (0.1, 0.55, 1.0)
+    rim.data.energy = 180
 
     bpy.ops.object.camera_add(location=(4.8, -6.0, 3.25), rotation=(math.radians(62), 0, math.radians(42)))
     camera = bpy.context.object

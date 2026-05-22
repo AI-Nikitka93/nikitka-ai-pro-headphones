@@ -928,7 +928,7 @@ section {
 .exploded-panel {
     margin-top: clamp(2rem, 3vw, 3rem);
     display: grid;
-    grid-template-columns: minmax(280px, 0.72fr) minmax(430px, 1.28fr);
+    grid-template-columns: minmax(260px, 0.58fr) minmax(500px, 1.42fr);
     gap: clamp(1.5rem, 3.5vw, 3.6rem);
     align-items: center;
     overflow: hidden;
@@ -943,7 +943,7 @@ section {
 
 .exploded-copy-block {
     min-width: 0;
-    max-width: 420px;
+    max-width: 390px;
 }
 
 .exploded-title {
@@ -960,11 +960,11 @@ section {
 }
 
 .exploded-design-stage {
-    height: clamp(360px, 35vw, 500px);
+    height: clamp(420px, 38vw, 560px);
     background:
-        linear-gradient(120deg, rgba(0, 0, 0, 0.18), transparent 55%),
-        radial-gradient(circle at 68% 45%, rgba(121, 82, 255, 0.17), transparent 42%),
-        radial-gradient(circle at 42% 50%, rgba(0, 240, 255, 0.12), transparent 45%),
+        linear-gradient(120deg, rgba(0, 0, 0, 0.28), transparent 58%),
+        radial-gradient(circle at 66% 42%, rgba(0, 240, 255, 0.11), transparent 40%),
+        radial-gradient(circle at 42% 54%, rgba(120, 130, 255, 0.07), transparent 45%),
         #060812;
     border: 1px solid rgba(0, 240, 255, 0.16);
     border-radius: 8px;
@@ -979,8 +979,8 @@ section {
     isolation: isolate;
     overflow: hidden;
     background:
-        radial-gradient(circle at 52% 44%, rgba(0, 240, 255, 0.1), transparent 44%),
-        radial-gradient(circle at 70% 32%, rgba(168, 85, 247, 0.12), transparent 36%),
+        radial-gradient(circle at 52% 44%, rgba(0, 240, 255, 0.08), transparent 44%),
+        radial-gradient(circle at 70% 32%, rgba(92, 108, 255, 0.07), transparent 36%),
         #050711;
 }
 
@@ -1027,8 +1027,8 @@ section {
     bottom: 0;
     left: 38%;
     z-index: 5;
-    width: 82px;
-    background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent);
+    width: 74px;
+    background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.14), transparent);
     opacity: 0;
     transform: skewX(-8deg) translateX(-36px);
     transition: opacity 0.42s ease, transform 0.7s ease;
@@ -1047,7 +1047,7 @@ section {
     top: 1rem;
     right: 1rem;
     z-index: 7;
-    color: rgba(0, 240, 255, 0.74);
+    color: rgba(0, 240, 255, 0.68);
     font-size: 0.66rem;
     font-weight: 900;
     letter-spacing: 0;
@@ -1147,6 +1147,15 @@ section {
     background: rgba(255, 255, 255, 0.03);
 }
 
+.anatomy-flow-note {
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(230, 235, 245, 0.62);
+    font-size: 0.76rem;
+    line-height: 1.5;
+}
+
 .anatomy-stage-rail {
     margin-top: 1rem;
     display: grid;
@@ -1156,7 +1165,7 @@ section {
 
 .anatomy-stage-rail button {
     appearance: none;
-    min-height: 46px;
+    min-height: 42px;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(255, 255, 255, 0.035);
@@ -1228,11 +1237,11 @@ section {
     left: 1rem;
     bottom: 1rem;
     z-index: 7;
-    width: min(330px, calc(100% - 2rem));
+    width: min(300px, calc(100% - 2rem));
     padding: 0.78rem 0.88rem;
     border: 1px solid rgba(0, 240, 255, 0.18);
     border-radius: 8px;
-    background: rgba(3, 5, 12, 0.66);
+    background: rgba(3, 5, 12, 0.82);
     backdrop-filter: blur(14px);
     box-shadow: 0 12px 34px rgba(0, 0, 0, 0.22);
     pointer-events: none;
@@ -1257,7 +1266,7 @@ section {
 .anatomy-stage-caption p {
     margin-top: 0.28rem;
     color: rgba(230, 235, 245, 0.72);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     line-height: 1.45;
 }
 
@@ -3242,11 +3251,27 @@ footer {
     .exploded-viewer {
         overflow: hidden;
     }
+    .exploded-panel.glass-card {
+        padding: 1.1rem;
+    }
+    .exploded-copy-block {
+        max-width: none;
+    }
+    .exploded-title {
+        font-size: 1.35rem;
+        line-height: 1.18;
+    }
+    .exploded-copy {
+        font-size: 0.86rem;
+        line-height: 1.55;
+    }
     .exploded-design-stage {
-        height: 260px;
+        height: 320px;
     }
     .anatomy-control-strip {
         align-items: stretch;
+        gap: 0.55rem;
+        margin-top: 1rem;
     }
     .anatomy-scan-btn,
     .anatomy-progress,
@@ -3258,7 +3283,18 @@ footer {
         display: block;
     }
     .anatomy-stage-rail {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.35rem;
+    }
+    .anatomy-stage-rail button {
+        min-height: 42px;
+        padding: 0.42rem 0.2rem;
+        font-size: 0.64rem;
+    }
+    .anatomy-flow-note {
+        font-size: 0.72rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
     }
     .anatomy-orbit-hint {
         top: 0.75rem;
@@ -3275,11 +3311,7 @@ footer {
         max-width: none;
     }
     .anatomy-stage-caption {
-        left: 0.75rem;
-        right: 0.75rem;
-        bottom: 0.75rem;
-        width: auto;
-        padding: 0.66rem 0.72rem;
+        display: none;
     }
     .anatomy-stage-caption strong {
         font-size: 0.8rem;

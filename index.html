@@ -7,8 +7,8 @@
     <meta name="description" content="Премиальный портфолио-сайт вымышленных наушников Nikitka AI PRO: кинематографичный hero, интерактивная анатомия, живой радиотест и продуктовая motion-витрина.">
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="preload" as="image" href="assets/hero-cinematic-desktop.avif" imagesrcset="assets/hero-cinematic-mobile.avif 960w, assets/hero-cinematic-desktop.avif 1920w" imagesizes="100vw" type="image/avif" fetchpriority="high">
-    <link rel="preload" as="fetch" href="assets/nikitka-ai-pro-product.glb?v=20260522-teardown-v1" type="model/gltf-binary" crossorigin>
-    <link rel="stylesheet" href="style.css?v=20260522-teardown-v1">
+    <link rel="preload" as="fetch" href="assets/nikitka-ai-pro-product.glb?v=20260522-teardown-v8" type="model/gltf-binary" crossorigin>
+    <link rel="stylesheet" href="style.css?v=20260522-teardown-v8">
     <script type="importmap">
     {
         "imports": {
@@ -323,12 +323,12 @@
                     <div class="exploded-copy-block">
                         <h3 class="exploded-title">Инженерная 3D-Анатомия</h3>
                         <p class="exploded-copy">
-                            Собери и разбери кейс Nikitka AI PRO: крышка, шарнир, батареи, AI-плата, контакты и драйвер наушника раскрываются как один понятный механизм.
+                            Четыре рабочих состояния показывают кейс Nikitka AI PRO как продуктовый CAD-разбор: корпус, крышка, питание, плата и акустический тракт.
                         </p>
 
                         <div class="anatomy-control-strip">
                             <button id="anatomy-scan-toggle" class="anatomy-scan-btn" type="button" aria-pressed="false">
-                                Разобрать кейс
+                                Открыть кейс
                             </button>
                             <span id="anatomy-readout" class="anatomy-readout" aria-live="polite">Загрузка 3D-модели</span>
                         </div>
@@ -344,13 +344,8 @@
                             <button type="button" data-viewer-stage="signal"><b>04</b> Сигнал</button>
                         </div>
 
-                        <div class="anatomy-proof-line" aria-label="Ключевые слои">
-                            <button type="button" data-viewer-part="case"><b>01</b> Корпус</button>
-                            <button type="button" data-viewer-part="lid"><b>02</b> Шарнир</button>
-                            <button type="button" data-viewer-part="battery"><b>03</b> Питание</button>
-                            <button type="button" data-viewer-part="ai"><b>04</b> AI-плата</button>
-                            <button type="button" data-viewer-part="buds"><b>05</b> Драйвер</button>
-                            <button type="button" data-viewer-part="signal"><b>06</b> Сигнал</button>
+                        <div class="anatomy-flow-note" aria-live="polite">
+                            <span>Кнопки выше реально перестраивают GLB-модель: детали расходятся по слоям, а не просто меняют текст.</span>
                         </div>
                     </div>
                     
@@ -360,11 +355,11 @@
                             <canvas id="product-3d-canvas" class="product-3d-canvas" aria-label="3D-модель Nikitka AI PRO"></canvas>
                             <div class="anatomy-vignette" aria-hidden="true"></div>
                             <div class="anatomy-scan-beam" aria-hidden="true"></div>
-                            <span class="anatomy-orbit-hint">REAL GLB 3D</span>
+                            <span class="anatomy-orbit-hint">CAD VIEW</span>
                             <div id="anatomy-stage-caption" class="anatomy-stage-caption" aria-live="polite">
-                                <span>assembly state</span>
+                                <span>сборка</span>
                                 <strong>Собранный кейс</strong>
-                                <p>Закрытый прозрачный корпус держит вкладыши, батареи, OLED и плату в одном модуле.</p>
+                                <p>Вкладыши сидят в посадочных колодцах под затемненной крышкой, как в реальном зарядном кейсе.</p>
                             </div>
                             <span id="model-loading" class="model-loading">Загружаю локальную 3D-модель</span>
                         </div>
@@ -898,7 +893,7 @@
         </div>
     </footer>
 
-    <script type="module" src="three-anatomy.js?v=20260522-teardown-v1"></script>
-    <script src="app.js?v=20260522-teardown-v1"></script>
+    <script type="module" src="three-anatomy.js?v=20260522-teardown-v8"></script>
+    <script src="app.js?v=20260522-teardown-v8"></script>
 </body>
 </html>
