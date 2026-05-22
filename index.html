@@ -7,7 +7,7 @@
     <meta name="description" content="Премиальный портфолио-сайт вымышленных наушников Nikitka AI PRO: кинематографичный hero, интерактивная анатомия, живой радиотест и продуктовая motion-витрина.">
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="preload" as="image" href="assets/hero-cinematic-desktop.avif" imagesrcset="assets/hero-cinematic-mobile.avif 960w, assets/hero-cinematic-desktop.avif 1920w" imagesizes="100vw" type="image/avif" fetchpriority="high">
-    <link rel="stylesheet" href="style.css?v=20260522-scrub-anatomy">
+    <link rel="stylesheet" href="style.css?v=20260522-real-audio">
 </head>
 <body>
 
@@ -637,7 +637,7 @@
                             <div class="stream-specs">
                                 <span id="station-codec">MP3</span>
                                 <span id="station-bitrate">128 kbps</span>
-                                <span>free stream</span>
+                                <span id="station-cors">CORS OK</span>
                             </div>
                         </div>
 
@@ -691,10 +691,25 @@
                         <!-- Focus concept slider -->
                         <div id="focus-widget-card" class="eq-slider-card disabled">
                             <div class="slider-info">
-                                <span>Степень концентрации мысли</span>
+                                <span>Фокус-фильтр: частота и четкость</span>
                                 <strong id="focus-val">50%</strong>
                             </div>
                             <input id="focus-slider" type="range" class="vol-slider" min="0" max="100" value="50">
+                        </div>
+
+                        <div class="audio-chain-panel" aria-live="polite">
+                            <span class="readout-label">реальная Web Audio цепь</span>
+                            <div class="chain-heading">
+                                <strong id="chain-preset">Bypass</strong>
+                                <span id="signal-meter">Signal 0%</span>
+                            </div>
+                            <p id="chain-desc">Чистый радиопоток без окраски: источник проходит через плоскую цепь фильтров.</p>
+                            <div class="chain-metrics">
+                                <span id="chain-low">Low 0 dB</span>
+                                <span id="chain-presence">Presence 0 dB</span>
+                                <span id="chain-filter">20 Hz - 20 kHz</span>
+                                <span id="chain-compressor">Comp off</span>
+                            </div>
                         </div>
 
                         <!-- Master Volume -->
@@ -719,6 +734,23 @@
                             <span class="visualizer-subtitle">Активность аудио-сигнала в реальном времени</span>
                         </div>
                         <canvas id="visualizer" class="visualizer-canvas"></canvas>
+                        <div class="visualizer-readout-grid" aria-live="polite">
+                            <div class="signal-meter-card">
+                                <span class="readout-label">rms</span>
+                                <div class="meter-track"><span id="rms-bar"></span></div>
+                                <strong id="rms-readout">RMS 0%</strong>
+                            </div>
+                            <div class="signal-meter-card">
+                                <span class="readout-label">peak</span>
+                                <div class="meter-track"><span id="peak-bar"></span></div>
+                                <strong id="peak-readout">Peak 0%</strong>
+                            </div>
+                            <div class="signal-chain-readout">
+                                <span class="readout-label">анализ</span>
+                                <strong id="live-mode">Idle</strong>
+                                <p id="live-chain">MediaElement - flat EQ - analyser</p>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -901,6 +933,6 @@
         </div>
     </footer>
 
-    <script src="app.js?v=20260522-scrub-anatomy"></script>
+    <script src="app.js?v=20260522-real-audio"></script>
 </body>
 </html>

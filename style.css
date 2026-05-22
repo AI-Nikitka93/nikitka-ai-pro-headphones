@@ -1775,6 +1775,7 @@ section {
     display: grid;
     grid-template-columns: 1.10fr 0.90fr;
     gap: clamp(1.5rem, 3vw, 2.4rem);
+    align-items: start;
 }
 
 .audio-console {
@@ -1809,9 +1810,9 @@ section {
 }
 
 .live-badge {
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    color: #ef4444;
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    color: #cbd5e1;
     padding: 0.2rem 0.6rem;
     border-radius: 6px;
     font-size: 0.75rem;
@@ -1825,8 +1826,31 @@ section {
 .live-badge .blink-dot {
     width: 6px;
     height: 6px;
-    background: #ef4444;
+    background: currentColor;
     border-radius: 50%;
+    box-shadow: 0 0 10px currentColor;
+}
+
+.live-badge.status-live {
+    background: rgba(16, 185, 129, 0.14);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #10b981;
+}
+
+.live-badge.status-loading {
+    background: rgba(0, 240, 255, 0.12);
+    border-color: rgba(0, 240, 255, 0.38);
+    color: var(--secondary);
+}
+
+.live-badge.status-error {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+}
+
+.live-badge.status-live .blink-dot,
+.live-badge.status-loading .blink-dot {
     animation: pulseGlow 1s ease-in-out infinite alternate;
 }
 
@@ -2020,8 +2044,9 @@ section {
     padding: 1.8rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 380px;
+    gap: 1.15rem;
+    min-height: 0;
+    height: auto;
     position: relative;
     overflow: hidden;
 }
@@ -2051,8 +2076,62 @@ section {
 
 .visualizer-canvas {
     width: 100%;
-    height: 100%;
+    height: clamp(240px, 22vw, 320px);
+    min-height: 240px;
     background-color: transparent;
+    flex: 1 1 auto;
+}
+
+.visualizer-readout-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    position: relative;
+    z-index: 5;
+}
+
+.signal-meter-card,
+.signal-chain-readout {
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.026);
+    padding: 0.85rem;
+}
+
+.signal-meter-card strong,
+.signal-chain-readout strong {
+    display: block;
+    margin-top: 0.5rem;
+    color: #fff;
+    font-size: 0.82rem;
+}
+
+.meter-track {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+
+.meter-track span {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--secondary), var(--accent-purple));
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+    transition: width 0.08s linear;
+}
+
+.signal-chain-readout {
+    grid-column: 1 / -1;
+}
+
+.signal-chain-readout p {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    margin-top: 0.35rem;
 }
 
 .vol-control {
@@ -2107,6 +2186,63 @@ section {
 
 .slider-info strong {
     color: var(--secondary);
+}
+
+.audio-chain-panel {
+    border: 1px solid rgba(0, 240, 255, 0.12);
+    border-radius: 8px;
+    padding: 1rem;
+    background:
+        linear-gradient(135deg, rgba(0, 240, 255, 0.055), rgba(138, 43, 226, 0.045)),
+        rgba(255, 255, 255, 0.018);
+}
+
+.chain-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.45rem;
+}
+
+.chain-heading strong {
+    color: #fff;
+    font-size: 0.98rem;
+}
+
+#signal-meter {
+    color: var(--secondary);
+    font-size: 0.76rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.audio-chain-panel p {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    margin-bottom: 0.8rem;
+}
+
+.chain-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+}
+
+.chain-metrics span {
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.32rem 0.45rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 /* AI Assistant section word-by-word matching */
@@ -2788,6 +2924,9 @@ footer {
     .stream-specs {
         grid-template-columns: repeat(3, 1fr);
     }
+    .chain-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
     .inside-media-frame {
         min-height: 360px;
     }
@@ -2919,6 +3058,13 @@ footer {
         width: 100%;
         padding: 1.25rem;
     }
+    .visualizer-card {
+        min-height: 360px;
+    }
+    .visualizer-canvas {
+        height: 200px;
+        min-height: 190px;
+    }
     .inside-stage-top,
     .inside-control-row {
         grid-template-columns: 1fr;
@@ -2971,6 +3117,16 @@ footer {
     }
     .stream-specs {
         grid-template-columns: 1fr;
+    }
+    .chain-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .chain-metrics {
+        grid-template-columns: 1fr;
+    }
+    .visualizer-readout-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .orbit-hotspot {
         display: none;

@@ -797,14 +797,30 @@ function initAudioSimulator() {
     const volumeSlider = document.getElementById('volume-slider');
     const focusSlider = document.getElementById('focus-slider');
     const focusWidget = document.getElementById('focus-widget-card');
+    const focusValue = document.getElementById('focus-val');
     const visualizer = document.getElementById('visualizer');
     const stationNow = document.getElementById('station-now');
     const stationTitle = document.getElementById('station-title');
     const stationDesc = document.getElementById('station-desc');
     const stationCodec = document.getElementById('station-codec');
     const stationBitrate = document.getElementById('station-bitrate');
+    const stationCors = document.getElementById('station-cors');
     const streamStatus = document.getElementById('stream-status');
+    const liveBadge = document.querySelector('.live-badge');
     const stationPills = document.querySelectorAll('.station-pill');
+    const chainPreset = document.getElementById('chain-preset');
+    const chainDesc = document.getElementById('chain-desc');
+    const chainLow = document.getElementById('chain-low');
+    const chainPresence = document.getElementById('chain-presence');
+    const chainFilter = document.getElementById('chain-filter');
+    const chainCompressor = document.getElementById('chain-compressor');
+    const signalMeter = document.getElementById('signal-meter');
+    const rmsReadout = document.getElementById('rms-readout');
+    const peakReadout = document.getElementById('peak-readout');
+    const rmsBar = document.getElementById('rms-bar');
+    const peakBar = document.getElementById('peak-bar');
+    const liveMode = document.getElementById('live-mode');
+    const liveChain = document.getElementById('live-chain');
 
     if (!playBtn) return;
 
@@ -814,42 +830,93 @@ function initAudioSimulator() {
             desc: "Ambient/downtempo beats and chilled grooves.",
             url: "https://ice2.somafm.com/groovesalad-128-mp3",
             codec: "MP3",
-            bitrate: "128 kbps"
+            bitrate: "128 kbps",
+            cors: "CORS OK"
         },
         drone: {
             title: "Drone Zone",
             desc: "Slow atmospheric textures for deep focus.",
             url: "https://ice2.somafm.com/dronezone-128-mp3",
             codec: "MP3",
-            bitrate: "128 kbps"
+            bitrate: "128 kbps",
+            cors: "CORS OK"
         },
         deep: {
             title: "Deep Space One",
             desc: "Deep ambient electronic and space music.",
             url: "https://ice2.somafm.com/deepspaceone-128-mp3",
             codec: "MP3",
-            bitrate: "128 kbps"
+            bitrate: "128 kbps",
+            cors: "CORS OK"
         },
         spacestation: {
             title: "Space Station Soma",
             desc: "Cosmic ambient and mid-tempo electronic music.",
             url: "https://ice2.somafm.com/spacestation-128-mp3",
             codec: "MP3",
-            bitrate: "128 kbps"
+            bitrate: "128 kbps",
+            cors: "CORS OK"
         },
         defcon: {
             title: "DEF CON Radio",
             desc: "Electronic music for hacking and cyber-night work.",
             url: "https://ice2.somafm.com/defcon-128-mp3",
             codec: "MP3",
-            bitrate: "128 kbps"
+            bitrate: "128 kbps",
+            cors: "CORS OK"
         },
         mission: {
             title: "Mission Control",
             desc: "Ambient music mixed with NASA mission audio.",
             url: "https://ice2.somafm.com/missioncontrol-128-mp3",
             codec: "MP3",
-            bitrate: "128 kbps"
+            bitrate: "128 kbps",
+            cors: "CORS OK"
+        }
+    };
+
+    const PRESETS = {
+        bypass: {
+            label: "Bypass",
+            desc: "Чистый радиопоток: плоский EQ, без компрессии и без имитаций.",
+            hp: 20,
+            lp: 20000,
+            lowGain: 0,
+            lowMidGain: 0,
+            presenceGain: 0,
+            airGain: 0,
+            threshold: 0,
+            ratio: 1,
+            knee: 0,
+            pan: 0
+        },
+        neuro: {
+            label: "NeuroSound",
+            desc: "Слышимо усиливает низ, убирает мутную середину и добавляет присутствие вокалу/синтам.",
+            hp: 26,
+            lp: 18000,
+            lowGain: 4.2,
+            lowMidGain: -1.6,
+            presenceGain: 3.4,
+            airGain: 2.2,
+            threshold: -18,
+            ratio: 2.1,
+            knee: 14,
+            pan: 0.02
+        },
+        anc: {
+            label: "Adaptive ANC filter",
+            desc: "Не заявляет реальный ANC: на потоке честно срезает верх и шумную середину, как режим приглушения.",
+            hp: 32,
+            lp: 3600,
+            lowGain: 1.2,
+            lowMidGain: -2.2,
+            presenceGain: -6.8,
+            airGain: -12,
+            threshold: -28,
+            ratio: 5,
+            knee: 24,
+            pan: 0
         }
     };
 
@@ -857,13 +924,19 @@ function initAudioSimulator() {
     let audioTag = null;
     let sourceNode = null;
     let analyserNode = null;
-    let bypassGain = null;
+    let highpassFilter = null;
     let filterLowpass = null;
-    let filterPeaking = null;
-    let spatialGain = null;
+    let lowShelfFilter = null;
+    let lowMidFilter = null;
+    let presenceFilter = null;
+    let airFilter = null;
+    let compressorNode = null;
+    let pannerNode = null;
     let masterGain = null;
-    let synthesizerInterval = null; // offline fallback synthesizer
-
+    let visualizerFrame = null;
+    let visualizerMode = 'idle';
+    let lastSignal = 0;
+    let lastPeak = 0;
     let isPlaying = false;
     let activePreset = 'bypass'; // bypass, neuro, anc, mind
 
@@ -872,7 +945,14 @@ function initAudioSimulator() {
     }
 
     function setStreamStatus(label) {
+        setStreamStatusState(label, 'ready');
+    }
+
+    function setStreamStatusState(label, state = 'ready') {
         if (streamStatus) streamStatus.textContent = label;
+        if (!liveBadge) return;
+        liveBadge.classList.remove('status-ready', 'status-loading', 'status-live', 'status-error');
+        liveBadge.classList.add(`status-${state}`);
     }
 
     function syncStationUI() {
@@ -882,6 +962,7 @@ function initAudioSimulator() {
         if (stationDesc) stationDesc.textContent = station.desc;
         if (stationCodec) stationCodec.textContent = station.codec;
         if (stationBitrate) stationBitrate.textContent = station.bitrate;
+        if (stationCors) stationCors.textContent = station.cors;
         stationPills.forEach(pill => {
             pill.classList.toggle('active', pill.getAttribute('data-station') === radioSelect.value);
         });
@@ -900,25 +981,63 @@ function initAudioSimulator() {
     resizeVisualizer();
     window.addEventListener('resize', resizeVisualizer);
 
-    // Dynamic wave animation loop when audio is NOT playing (idle wave)
-    function drawIdleVisualizer() {
-        if (isPlaying) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height / 2);
-        
-        const time = Date.now() * 0.004;
-        for (let x = 0; x < canvas.width; x++) {
-            const y = canvas.height / 2 + Math.sin(x * 0.015 + time) * 8 * Math.cos(x * 0.005);
-            ctx.lineTo(x, y);
-        }
-        
-        ctx.strokeStyle = 'rgba(138, 43, 226, 0.4)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        requestAnimationFrame(drawIdleVisualizer);
+    function formatDb(value) {
+        if (value === 0) return '0 dB';
+        return `${value > 0 ? '+' : ''}${value.toFixed(1)} dB`;
     }
-    drawIdleVisualizer();
+
+    function getMindPresetValues() {
+        const focus = parseInt(focusSlider.value, 10) || 0;
+        const n = focus / 100;
+        return {
+            label: "Brain Focus filter",
+            desc: "Реальный focus-фильтр: двигает частотное окно, поднимает разборчивость и сильнее сжимает динамику.",
+            hp: Math.round(35 + (n * 135)),
+            lp: Math.round(6200 + (n * 9000)),
+            lowGain: -1 - (n * 2.4),
+            lowMidGain: -3 + (n * 1.2),
+            presenceGain: 1.4 + (n * 5.2),
+            airGain: -1.8 + (n * 3.8),
+            threshold: -24 + (n * 6),
+            ratio: 2.2 + (n * 1.8),
+            knee: 16,
+            pan: 0
+        };
+    }
+
+    function getActivePresetValues() {
+        return activePreset === 'mind' ? getMindPresetValues() : PRESETS[activePreset];
+    }
+
+    function updateProcessingUI() {
+        const preset = getActivePresetValues();
+        const rmsPercent = Math.round(lastSignal * 100);
+        const peakPercent = Math.round(lastPeak * 100);
+        if (focusValue) focusValue.textContent = `${parseInt(focusSlider.value, 10)}%`;
+        if (chainPreset) chainPreset.textContent = preset.label;
+        if (chainDesc) chainDesc.textContent = preset.desc;
+        if (chainLow) chainLow.textContent = `Low ${formatDb(preset.lowGain)}`;
+        if (chainPresence) chainPresence.textContent = `Presence ${formatDb(preset.presenceGain)}`;
+        if (chainFilter) chainFilter.textContent = `${preset.hp} Hz - ${preset.lp >= 19000 ? '20 kHz' : `${(preset.lp / 1000).toFixed(1)} kHz`}`;
+        if (chainCompressor) chainCompressor.textContent = preset.ratio === 1 ? 'Comp off' : `Comp ${preset.ratio.toFixed(1)}:1`;
+        if (signalMeter) signalMeter.textContent = `Signal ${rmsPercent}%`;
+        if (rmsReadout) rmsReadout.textContent = `RMS ${rmsPercent}%`;
+        if (peakReadout) peakReadout.textContent = `Peak ${peakPercent}%`;
+        if (rmsBar) rmsBar.style.width = `${Math.min(100, rmsPercent)}%`;
+        if (peakBar) peakBar.style.width = `${Math.min(100, peakPercent)}%`;
+        if (liveMode) liveMode.textContent = isPlaying ? 'Live input' : 'Idle';
+        if (liveChain) {
+            liveChain.textContent = preset.ratio === 1
+                ? 'MediaElement - flat EQ - analyser - speakers'
+                : 'MediaElement - EQ filters - compressor - analyser - speakers';
+        }
+    }
+
+    function rampParam(param, value, time = 0.08) {
+        if (!audioCtx || !param) return;
+        param.cancelScheduledValues(audioCtx.currentTime);
+        param.setTargetAtTime(value, audioCtx.currentTime, time);
+    }
 
     // Create the Web Audio Routing graph
     function setupWebAudio() {
@@ -929,10 +1048,12 @@ function initAudioSimulator() {
         audioTag.crossOrigin = "anonymous";
         audioTag.preload = "none";
         audioTag.src = getStation().url;
-        audioTag.addEventListener('waiting', () => setStreamStatus('Buffering'));
-        audioTag.addEventListener('playing', () => setStreamStatus('Live'));
-        audioTag.addEventListener('pause', () => setStreamStatus('Paused'));
-        audioTag.addEventListener('error', () => setStreamStatus('Synth fallback'));
+        audioTag.addEventListener('waiting', () => setStreamStatusState('Buffering', 'loading'));
+        audioTag.addEventListener('playing', () => setStreamStatusState('Live', 'live'));
+        audioTag.addEventListener('pause', () => {
+            if (!isPlaying) setStreamStatusState('Paused', 'ready');
+        });
+        audioTag.addEventListener('error', () => setStreamStatusState('Stream error', 'error'));
 
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContextClass();
@@ -942,37 +1063,74 @@ function initAudioSimulator() {
 
         // 2. Analyser
         analyserNode = audioCtx.createAnalyser();
-        analyserNode.fftSize = 256;
+        analyserNode.fftSize = 512;
+        analyserNode.smoothingTimeConstant = 0.78;
         bufferLength = analyserNode.frequencyBinCount;
         dataArray = new Uint8Array(bufferLength);
 
-        // 3. Noise Filter (BiquadFilter lowpass representing ambient sound block)
+        // 3. Real EQ/filter chain. These nodes audibly change the stream.
+        highpassFilter = audioCtx.createBiquadFilter();
+        highpassFilter.type = 'highpass';
+        highpassFilter.frequency.setValueAtTime(20, audioCtx.currentTime);
+        highpassFilter.Q.setValueAtTime(0.6, audioCtx.currentTime);
+
+        lowShelfFilter = audioCtx.createBiquadFilter();
+        lowShelfFilter.type = 'lowshelf';
+        lowShelfFilter.frequency.setValueAtTime(95, audioCtx.currentTime);
+        lowShelfFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+
+        lowMidFilter = audioCtx.createBiquadFilter();
+        lowMidFilter.type = 'peaking';
+        lowMidFilter.frequency.setValueAtTime(360, audioCtx.currentTime);
+        lowMidFilter.Q.setValueAtTime(1.1, audioCtx.currentTime);
+        lowMidFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+
+        presenceFilter = audioCtx.createBiquadFilter();
+        presenceFilter.type = 'peaking';
+        presenceFilter.frequency.setValueAtTime(2600, audioCtx.currentTime);
+        presenceFilter.Q.setValueAtTime(1.25, audioCtx.currentTime);
+        presenceFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+
+        airFilter = audioCtx.createBiquadFilter();
+        airFilter.type = 'highshelf';
+        airFilter.frequency.setValueAtTime(9000, audioCtx.currentTime);
+        airFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+
         filterLowpass = audioCtx.createBiquadFilter();
         filterLowpass.type = 'lowpass';
-        filterLowpass.frequency.setValueAtTime(20000, audioCtx.currentTime); // Off initially
+        filterLowpass.frequency.setValueAtTime(20000, audioCtx.currentTime);
+        filterLowpass.Q.setValueAtTime(0.55, audioCtx.currentTime);
 
-        // 4. Focus Equalizer (Peaking Filter representing thought concentration)
-        filterPeaking = audioCtx.createBiquadFilter();
-        filterPeaking.type = 'peaking';
-        filterPeaking.Q.setValueAtTime(1.5, audioCtx.currentTime);
-        filterPeaking.frequency.setValueAtTime(1000, audioCtx.currentTime);
-        filterPeaking.gain.setValueAtTime(0, audioCtx.currentTime); // Off initially
+        compressorNode = audioCtx.createDynamicsCompressor();
+        compressorNode.threshold.setValueAtTime(0, audioCtx.currentTime);
+        compressorNode.ratio.setValueAtTime(1, audioCtx.currentTime);
+        compressorNode.knee.setValueAtTime(0, audioCtx.currentTime);
+        compressorNode.attack.setValueAtTime(0.005, audioCtx.currentTime);
+        compressorNode.release.setValueAtTime(0.18, audioCtx.currentTime);
 
-        // 5. Spatial NeuroSound (Gain for emulation of expansion)
-        spatialGain = audioCtx.createGain();
-        spatialGain.gain.setValueAtTime(1.0, audioCtx.currentTime);
+        pannerNode = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
+        if (pannerNode) pannerNode.pan.setValueAtTime(0, audioCtx.currentTime);
 
-        // 6. Master Volume Node
         masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(volumeSlider.value / 100, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime((parseInt(volumeSlider.value, 10) || 65) / 100, audioCtx.currentTime);
 
-        // Routing: Source -> Analyser -> Lowpass -> Peaking -> Spatial -> Master -> Destination
-        sourceNode.connect(analyserNode);
-        analyserNode.connect(filterLowpass);
-        filterLowpass.connect(filterPeaking);
-        filterPeaking.connect(spatialGain);
-        spatialGain.connect(masterGain);
-        masterGain.connect(audioCtx.destination);
+        // Routing: radio -> EQ -> compressor -> optional panner -> volume -> analyser -> speakers.
+        sourceNode.connect(highpassFilter);
+        highpassFilter.connect(lowShelfFilter);
+        lowShelfFilter.connect(lowMidFilter);
+        lowMidFilter.connect(presenceFilter);
+        presenceFilter.connect(airFilter);
+        airFilter.connect(filterLowpass);
+        filterLowpass.connect(compressorNode);
+        if (pannerNode) {
+            compressorNode.connect(pannerNode);
+            pannerNode.connect(masterGain);
+        } else {
+            compressorNode.connect(masterGain);
+        }
+        masterGain.connect(analyserNode);
+        analyserNode.connect(audioCtx.destination);
+        applyAudioFilters();
     }
 
     // Connect Eq button interactions
@@ -983,9 +1141,6 @@ function initAudioSimulator() {
 
             const preset = btn.getAttribute('data-eq');
             activePreset = preset;
-
-            // Trigger click feedback noise or simple beep if context initialized
-            playUIBeep();
 
             // Toggle Mental focus panel enabling
             if (preset === 'mind') {
@@ -999,117 +1154,28 @@ function initAudioSimulator() {
     });
 
     function applyAudioFilters() {
-        if (!audioCtx) return;
-        const now = audioCtx.currentTime;
-
-        // Reset all nodes
-        filterLowpass.frequency.setTargetAtTime(20000, now, 0.1);
-        filterPeaking.gain.setTargetAtTime(0, now, 0.1);
-        spatialGain.gain.setTargetAtTime(1.0, now, 0.1);
-
-        if (activePreset === 'bypass') {
-            // standard sound, direct bypass
-        } 
-        else if (activePreset === 'neuro') {
-            // Bass expansion + high clarity
-            spatialGain.gain.setTargetAtTime(1.35, now, 0.2);
-            filterPeaking.type = 'peaking';
-            filterPeaking.frequency.setTargetAtTime(80, now, 0.1); // Boost Sub-Bass
-            filterPeaking.gain.setTargetAtTime(7.5, now, 0.1);
-        } 
-        else if (activePreset === 'anc') {
-            // Cut high environmental frequencies and dynamic compression emulation
-            filterLowpass.frequency.setTargetAtTime(2800, now, 0.3); // Heavy muffled lowpass
-            spatialGain.gain.setTargetAtTime(0.85, now, 0.2);
-        } 
-        else if (activePreset === 'mind') {
-            // Hook filter to focus-slider
-            updateFocusFilter();
+        const preset = getActivePresetValues();
+        if (audioCtx) {
+            rampParam(highpassFilter.frequency, preset.hp, 0.12);
+            rampParam(filterLowpass.frequency, preset.lp, 0.16);
+            rampParam(lowShelfFilter.gain, preset.lowGain, 0.1);
+            rampParam(lowMidFilter.gain, preset.lowMidGain, 0.1);
+            rampParam(presenceFilter.gain, preset.presenceGain, 0.1);
+            rampParam(airFilter.gain, preset.airGain, 0.1);
+            rampParam(compressorNode.threshold, preset.threshold, 0.12);
+            rampParam(compressorNode.ratio, preset.ratio, 0.12);
+            rampParam(compressorNode.knee, preset.knee, 0.12);
+            if (pannerNode) rampParam(pannerNode.pan, preset.pan, 0.18);
         }
+        updateProcessingUI();
     }
 
     function updateFocusFilter() {
-        if (!audioCtx || activePreset !== 'mind') return;
-        const now = audioCtx.currentTime;
-        const val = parseInt(focusSlider.value); // 0 - 100
-
-        // Map focus value to frequency sweeps
-        // Low focus = smooth low ambient drone, High focus = sharp mid crisp
-        const freq = 200 + (val * 85);
-        const gain = -10 + (val * 0.28); // Boost as focus rises
-        
-        filterPeaking.type = 'peaking';
-        filterPeaking.frequency.setTargetAtTime(freq, now, 0.05);
-        filterPeaking.gain.setTargetAtTime(gain, now, 0.05);
+        if (focusValue) focusValue.textContent = `${parseInt(focusSlider.value, 10)}%`;
+        if (activePreset === 'mind') applyAudioFilters();
     }
 
     focusSlider.addEventListener('input', updateFocusFilter);
-
-    // Offline / Loading backup ambient synthesizer (in case streams fail or loading takes too long)
-    function startBackupSynth() {
-        if (synthesizerInterval) clearInterval(synthesizerInterval);
-        
-        // Setup oscillator sweeps to keep visualizer moving and sound playing
-        let osc = audioCtx.createOscillator();
-        let amp = audioCtx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(120, audioCtx.currentTime); // Warm chord baseline
-        
-        amp.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-        amp.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 1.5);
-
-        osc.connect(amp);
-        amp.connect(analyserNode);
-        osc.start();
-
-        // Arpeggiator sweeps simulating neural waves
-        let tick = 0;
-        synthesizerInterval = setInterval(() => {
-            const freq = [120, 160, 240, 320, 480][tick % 5];
-            osc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.25);
-            tick++;
-        }, 1200);
-
-        // Store references to destroy later
-        audioTag.backupSynthOsc = osc;
-        audioTag.backupSynthAmp = amp;
-    }
-
-    function stopBackupSynth() {
-        if (synthesizerInterval) {
-            clearInterval(synthesizerInterval);
-            synthesizerInterval = null;
-        }
-        if (audioTag && audioTag.backupSynthOsc) {
-            try {
-                audioTag.backupSynthAmp.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
-                setTimeout(() => {
-                    audioTag.backupSynthOsc.stop();
-                    audioTag.backupSynthOsc.disconnect();
-                    audioTag.backupSynthAmp.disconnect();
-                }, 500);
-            } catch(e){}
-        }
-    }
-
-    // UI Beep synthesizer
-    function playUIBeep() {
-        if (!audioCtx) return;
-        try {
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.12);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.15);
-        } catch(e){}
-    }
 
     // Toggle Play Action
     playBtn.addEventListener('click', async () => {
@@ -1130,29 +1196,31 @@ function initAudioSimulator() {
                 
                 // Play stream
                 audioTag.src = getStation().url;
+                audioTag.load();
                 
                 // Set loading status indicator
                 playBtn.style.opacity = '0.7';
-                setStreamStatus('Buffering');
+                setStreamStatusState('Buffering', 'loading');
                 
                 audioTag.play()
                     .then(() => {
                         isPlaying = true;
                         playBtn.style.opacity = '1';
-                        setStreamStatus('Live');
-                        stopBackupSynth();
+                        setStreamStatusState('Live', 'live');
                         applyAudioFilters();
                         drawActiveVisualizer();
                     })
                     .catch(err => {
-                        console.warn("Direct stream load failed (CORS or network). Starting local Neural Synth fallback!", err);
-                        // Start offline synthesizer simulation so page *still* functions perfectly
-                        isPlaying = true;
+                        console.warn("Stream load failed. No synthetic audio fallback is used.", err);
+                        isPlaying = false;
                         playBtn.style.opacity = '1';
-                        setStreamStatus('Synth fallback');
-                        startBackupSynth();
-                        applyAudioFilters();
-                        drawActiveVisualizer();
+                        playBtn.innerHTML = `
+                            <svg class="play-icon-symbol" viewBox="0 0 24 24" width="22" height="22" fill="#000">
+                                <polygon points="5 3 19 12 5 21"></polygon>
+                            </svg>
+                        `;
+                        setStreamStatusState('Stream error', 'error');
+                        drawIdleVisualizer();
                     });
             } else {
                 playBtn.innerHTML = `
@@ -1161,9 +1229,8 @@ function initAudioSimulator() {
                     </svg>
                 `;
                 audioTag.pause();
-                stopBackupSynth();
                 isPlaying = false;
-                setStreamStatus('Paused');
+                setStreamStatusState('Paused', 'ready');
                 drawIdleVisualizer();
             }
         } catch (e) {
@@ -1176,16 +1243,19 @@ function initAudioSimulator() {
         syncStationUI();
         if (isPlaying) {
             playBtn.style.opacity = '0.7';
-            setStreamStatus('Buffering');
+            setStreamStatusState('Buffering', 'loading');
             audioTag.src = getStation().url;
+            audioTag.load();
             audioTag.play().then(() => {
                 playBtn.style.opacity = '1';
-                setStreamStatus('Live');
-                stopBackupSynth();
-            }).catch(() => {
-                startBackupSynth();
+                setStreamStatusState('Live', 'live');
+                drawActiveVisualizer();
+            }).catch((err) => {
+                console.warn("Station switch failed. No synthetic fallback is used.", err);
+                isPlaying = false;
                 playBtn.style.opacity = '1';
-                setStreamStatus('Synth fallback');
+                setStreamStatusState('Stream error', 'error');
+                drawIdleVisualizer();
             });
         }
     });
@@ -1203,16 +1273,39 @@ function initAudioSimulator() {
     volumeSlider.addEventListener('input', (e) => {
         const vol = parseInt(e.target.value) / 100;
         if (masterGain) {
-            masterGain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            rampParam(masterGain.gain, vol, 0.05);
         }
     });
 
     syncStationUI();
+    updateProcessingUI();
 
-    // Active visualizer animation
-    function drawActiveVisualizer() {
-        if (!isPlaying) return;
-        
+    function stopVisualizerFrame() {
+        if (visualizerFrame) {
+            cancelAnimationFrame(visualizerFrame);
+            visualizerFrame = null;
+        }
+    }
+
+    function drawIdleVisualizer() {
+        visualizerMode = 'idle';
+        stopVisualizerFrame();
+        lastSignal = 0;
+        lastPeak = 0;
+        updateProcessingUI();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const y = canvas.height * 0.58;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.24)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    function renderActiveVisualizer() {
+        if (!isPlaying || !analyserNode) return;
+
         analyserNode.getByteFrequencyData(dataArray);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -1220,10 +1313,13 @@ function initAudioSimulator() {
         let barHeight;
         let x = 0;
 
-        // Draw multiple beautiful visual paths: bar graph & smooth glow envelope
+        let signalSum = 0;
+        let peakValue = 0;
         ctx.beginPath();
         for (let i = 0; i < bufferLength; i++) {
             barHeight = dataArray[i];
+            signalSum += barHeight * barHeight;
+            peakValue = Math.max(peakValue, barHeight);
 
             // Color gradient mapping: blue to purple
             const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
@@ -1241,8 +1337,34 @@ function initAudioSimulator() {
             x += barWidth;
         }
 
-        requestAnimationFrame(drawActiveVisualizer);
+        lastSignal = Math.sqrt(signalSum / bufferLength) / 255;
+        lastPeak = peakValue / 255;
+        updateProcessingUI();
+        visualizerFrame = requestAnimationFrame(renderActiveVisualizer);
     }
+
+    // Active visualizer animation
+    function drawActiveVisualizer() {
+        if (visualizerMode === 'active' && visualizerFrame) return;
+        visualizerMode = 'active';
+        stopVisualizerFrame();
+        renderActiveVisualizer();
+    }
+
+    drawIdleVisualizer();
+
+    window.NIKITKA_AUDIO_DEBUG = {
+        getState: () => ({
+            isPlaying,
+            activePreset,
+            station: radioSelect.value,
+            status: streamStatus ? streamStatus.textContent : '',
+            signal: lastSignal,
+            preset: getActivePresetValues(),
+            audioReadyState: audioTag ? audioTag.readyState : 0,
+            paused: audioTag ? audioTag.paused : true
+        })
+    };
 }
 
 /* ==========================================================================
