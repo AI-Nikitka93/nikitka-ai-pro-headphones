@@ -150,6 +150,7 @@ header.scrolled .navbar {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-height: 44px;
     font-size: 1.6rem;
     color: #fff;
     text-decoration: none;
@@ -273,9 +274,16 @@ header.scrolled .navbar {
 
 .menu-toggle {
     display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
+    padding: 0;
 }
 
 .menu-toggle span {
@@ -283,7 +291,7 @@ header.scrolled .navbar {
     width: 25px;
     height: 2px;
     background-color: #fff;
-    margin: 5px 0;
+    margin: 0;
 }
 
 /* Hero Section */
@@ -373,7 +381,7 @@ header.scrolled .navbar {
 
 .hero-title {
     font-size: clamp(4rem, 5.6vw, 7.4rem);
-    line-height: 0.98;
+    line-height: 1.03;
     margin-bottom: 1.5rem;
     color: #fff;
     font-weight: 800;
@@ -2765,11 +2773,16 @@ footer {
         transform: translateY(0);
         pointer-events: auto;
     }
+    .nav-links a {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+    }
     .nav-cta .btn-primary {
         display: none;
     }
     .menu-toggle {
-        display: block;
+        display: inline-flex;
         z-index: 1001;
     }
     .menu-toggle span {
@@ -2970,11 +2983,16 @@ footer {
         transform: translateY(0);
         pointer-events: auto;
     }
+    .nav-links a {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+    }
     .nav-cta .btn-primary {
         display: none;
     }
     .menu-toggle {
-        display: block;
+        display: inline-flex;
         z-index: 1001;
     }
     .menu-toggle span {

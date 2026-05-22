@@ -168,7 +168,7 @@ function initNavbar() {
     });
 
     // 1. Navigation Scrollspy
-    const sections = document.querySelectorAll('section[id]');
+    const sections = document.querySelectorAll('section[id], #product-3d');
     const navLinks = document.querySelectorAll('.nav-links a');
 
     window.addEventListener('scroll', () => {
@@ -176,7 +176,7 @@ function initNavbar() {
         const scrollPos = window.scrollY + 160; // offset for nav height
 
         sections.forEach(section => {
-            const sectionTop = section.offsetTop;
+            const sectionTop = section.getBoundingClientRect().top + window.scrollY;
             const sectionHeight = section.offsetHeight;
 
             if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
