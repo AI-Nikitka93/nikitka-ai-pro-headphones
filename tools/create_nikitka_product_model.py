@@ -152,11 +152,14 @@ def create_earbud(prefix, x, y, z, side=1, floating=False):
     face = uv_sphere(f"{prefix}_transparent_sensor_shell", (x + side * 0.04, y - 0.05, z + 0.06), (0.36, 0.17, 0.38), smoked_glass, segments=64, rings=24, rotation=(0.1, 0, 0))
     tip = cyl(f"{prefix}_silicone_ear_tip", (x - side * 0.36, y - 0.22, z - 0.02), 0.18, 0.34, rubber, vertices=48, rotation=(math.pi / 2, side * 0.22, 0), scale=(1.0, 1.0, 0.72))
     torus(f"{prefix}_tip_soft_lip", (x - side * 0.5, y - 0.22, z - 0.02), 0.16, 0.035, rubber, rotation=(math.pi / 2, side * 0.22, 0), scale=(1.0, 0.74, 1.0))
+    torus(f"{prefix}_driver_beryllium_ring", (x - side * 0.2, y - 0.27, z + 0.06), 0.2, 0.018, metal, rotation=(math.pi / 2, 0, 0), scale=(1.1, 0.78, 0.22))
+    cyl(f"{prefix}_micro_driver_diaphragm", (x - side * 0.2, y - 0.294, z + 0.06), 0.16, 0.025, cyan_emit, vertices=64, rotation=(math.pi / 2, 0, 0), scale=(1.1, 0.78, 0.18))
 
     stem_top = (x + side * 0.2, y - 0.08, z - 0.26)
     stem_bottom = (x + side * 0.46, y - 0.12, z - 1.17)
     capsule_between(f"{prefix}_polished_stem", stem_top, stem_bottom, 0.13, glossy_black)
     capsule_between(f"{prefix}_stem_inner_light_pipe", (stem_top[0] + side * 0.035, stem_top[1] - 0.015, stem_top[2] - 0.17), (stem_bottom[0] + side * 0.02, stem_bottom[1] - 0.015, stem_bottom[2] + 0.2), 0.022, purple_emit)
+    capsule_between(f"{prefix}_titanium_stem_edge", (stem_top[0] - side * 0.075, stem_top[1] - 0.004, stem_top[2] - 0.12), (stem_bottom[0] - side * 0.056, stem_bottom[1] - 0.006, stem_bottom[2] + 0.26), 0.018, metal)
 
     sensor = cyl(f"{prefix}_fingerprint_sensor_disc", (x + side * 0.12, y - 0.27, z + 0.18), 0.17, 0.035, purple_emit, vertices=64, rotation=(math.pi / 2, 0, 0), scale=(1.0, 1.0, 0.35))
     for i, r in enumerate((0.07, 0.11, 0.145)):
@@ -171,6 +174,31 @@ def create_earbud(prefix, x, y, z, side=1, floating=False):
             if obj.name.startswith(prefix):
                 obj.rotation_euler[2] += side * 0.16
                 obj.rotation_euler[0] += -0.08
+
+
+def add_case_internals():
+    battery = material("matte graphene battery cell", (0.08, 0.1, 0.12, 1), metallic=0.18, roughness=0.32)
+    board = material("dark ai logic board", (0.01, 0.05, 0.065, 1), metallic=0.24, roughness=0.18)
+    chip = material("black neural dsp package", (0.006, 0.007, 0.011, 1), metallic=0.48, roughness=0.16)
+
+    for side in (-1, 1):
+        cell = cube(f"case_battery_cell_{side}", (side * 1.18, 0.35, 0.64), (1.05, 0.58, 0.16), battery, 0.055, 8)
+        cell.rotation_euler[2] = side * math.radians(3)
+        add_text(f"case_battery_cell_label_{side}", "GRAPHENE", (side * 1.18, 0.03, 0.74), (math.radians(90), 0, 0), 0.072, white_emit)
+
+    ai_board = cube("ai_core_board_teal_pcb", (0, 0.34, 0.72), (0.92, 0.58, 0.09), board, 0.045, 8)
+    ai_board.rotation_euler[2] = math.radians(-2)
+    main_chip = cube("ai_core_neural_dsp_chip", (0, 0.02, 0.86), (0.44, 0.09, 0.26), chip, 0.035, 6)
+    main_chip.rotation_euler[2] = math.radians(-2)
+    add_text("ai_core_chip_text", "N-CORE", (0, -0.035, 0.91), (math.radians(90), 0, 0), 0.064, cyan_emit)
+
+    for i, x in enumerate([-0.37, -0.22, 0.22, 0.37]):
+        cube(f"ai_core_memory_block_{i}", (x, 0.03, 0.72), (0.11, 0.07, 0.17), chip, 0.018, 4)
+    for i, x in enumerate([-0.52, -0.36, -0.2, 0.2, 0.36, 0.52]):
+        capsule_between(f"ai_core_cyan_trace_{i}", (x, 0.005, 0.79), (x * 0.36, 0.005, 0.86), 0.009, cyan_emit)
+
+    hinge = cyl("case_precision_hinge_titanium", (0, 1.04, 1.12), 0.055, 4.65, metal, vertices=48, rotation=(0, math.pi / 2, 0), scale=(1, 1, 1))
+    hinge.rotation_euler[0] = math.radians(-12)
 
 
 def create_scene():
@@ -191,6 +219,8 @@ def create_scene():
     front_panel = cube("case_front_oled_panel", (0, -1.19, 0.4), (2.0, 0.08, 0.42), dark_panel, 0.07, 8)
     add_text("case_front_brand_text", "NIKITKA AI PRO", (0, -1.238, 0.46), (math.radians(90), 0, 0), 0.18, white_emit)
     add_text("case_front_battery_text", "100%", (-0.55, -1.242, 0.24), (math.radians(90), 0, 0), 0.105, purple_emit)
+    capsule_between("case_front_cyan_light_blade", (-2.22, -1.255, 0.66), (2.22, -1.255, 0.66), 0.015, cyan_emit)
+    capsule_between("case_rear_precision_light_seam", (-2.28, 1.03, 0.92), (2.28, 1.03, 0.92), 0.013, purple_emit)
 
     for i in range(10):
         cube(f"case_battery_bar_{i:02d}", (-0.18 + i * 0.075, -1.25, 0.24), (0.044, 0.018, 0.13), purple_emit, 0.01, 2)
@@ -200,6 +230,8 @@ def create_scene():
         cyl(f"case_well_dark_cavity_{side}", (side * 1.45, -0.15, 0.95), 0.5, 0.08, dark_panel, vertices=96, scale=(1.26, 0.82, 0.12))
         cyl(f"case_charge_pin_{side}_a", (side * 1.22, -0.16, 1.04), 0.035, 0.035, cyan_emit, vertices=24)
         cyl(f"case_charge_pin_{side}_b", (side * 1.68, -0.16, 1.04), 0.035, 0.035, cyan_emit, vertices=24)
+
+    add_case_internals()
 
     lid = cube("open_lid_transparent_oled_window", (0, 0.95, 2.02), (4.85, 0.22, 1.75), smoked_glass, 0.16, 14)
     lid.rotation_euler[0] = math.radians(-12)

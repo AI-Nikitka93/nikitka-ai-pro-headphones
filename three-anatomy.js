@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const MODEL_URL = 'assets/nikitka-ai-pro-product.glb';
+const MODEL_URL = 'assets/nikitka-ai-pro-product.glb?v=20260522-premium-v2';
 
 const ready = (callback) => {
     if (document.readyState === 'loading') {
@@ -63,9 +64,11 @@ ready(() => {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.88;
+    renderer.toneMappingExposure = 1.08;
 
     const scene = new THREE.Scene();
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
     const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 80);
     camera.position.set(4.15, 2.55, 6.35);
 
@@ -77,9 +80,42 @@ ready(() => {
     controls.maxDistance = 9.2;
     controls.autoRotate = !reducedMotion;
     controls.autoRotateSpeed = 0.36;
-    controls.target.set(0, 0.45, 0);
+    controls.target.set(0, 0.34, 0.04);
 
-    scene.add(new THREE.AmbientLight(0x7e96d8, 0.36));
+    const cameraPresets = {
+        case: {
+            position: new THREE.Vector3(4.15, 2.45, 6.6),
+            target: new THREE.Vector3(0, 0.3, 0.08)
+        },
+        buds: {
+            position: new THREE.Vector3(3.3, 2.32, 5.25),
+            target: new THREE.Vector3(0.15, 0.68, 0.02)
+        },
+        ai: {
+            position: new THREE.Vector3(3.45, 2.65, 4.95),
+            target: new THREE.Vector3(0, 0.9, 0.05)
+        },
+        battery: {
+            position: new THREE.Vector3(3.8, 1.85, 5.35),
+            target: new THREE.Vector3(0, 0.18, 0.22)
+        },
+        sensor: {
+            position: new THREE.Vector3(2.85, 2.45, 4.85),
+            target: new THREE.Vector3(0.65, 0.82, 0.02)
+        }
+    };
+    const cameraGoal = cameraPresets.case.position.clone();
+    const targetGoal = cameraPresets.case.target.clone();
+    let cameraPresetFrames = 0;
+
+    const setCameraPreset = (part) => {
+        const preset = cameraPresets[part] || cameraPresets.case;
+        cameraGoal.copy(preset.position);
+        targetGoal.copy(preset.target);
+        cameraPresetFrames = reducedMotion ? 1 : 170;
+    };
+
+    scene.add(new THREE.AmbientLight(0x8aa6e8, 0.42));
 
     const key = new THREE.DirectionalLight(0xffffff, 2.8);
     key.position.set(4.2, 5.4, 5.0);
@@ -92,6 +128,10 @@ ready(() => {
     const purple = new THREE.PointLight(0x8a2be2, 4.2, 8.5);
     purple.position.set(2.7, 0.7, 2.9);
     scene.add(purple);
+
+    const frontFill = new THREE.DirectionalLight(0xd9f7ff, 1.55);
+    frontFill.position.set(-2.2, 1.6, 4.6);
+    scene.add(frontFill);
 
     const pivot = new THREE.Group();
     pivot.rotation.set(-0.04, -0.34, 0);
@@ -108,9 +148,10 @@ ready(() => {
         const lower = name.toLowerCase();
         const categories = new Set();
 
-        if (lower.includes('earbud')) categories.add('buds');
+        if (lower.includes('earbud') || lower.includes('driver')) categories.add('buds');
         if (lower.includes('fingerprint') || lower.includes('sensor')) categories.add('sensor');
         if (lower.includes('battery')) categories.add('battery');
+        if (lower.includes('ai_core') || lower.includes('neural') || lower.includes('chip') || lower.includes('board')) categories.add('ai');
         if (lower.includes('lid_ui') || lower.includes('adaptive') || lower.includes('hologram') || lower.includes('oled')) categories.add('ai');
         if (lower.startsWith('case') || lower.includes('lid') || lower.includes('well')) categories.add('case');
         if (!categories.size) categories.add('case');
@@ -122,7 +163,10 @@ ready(() => {
         const lower = name.toLowerCase();
         if (lower.startsWith('left_floating_earbud')) return new THREE.Vector3(-0.48, 0.38, 0.05);
         if (lower.startsWith('right_docked_earbud')) return new THREE.Vector3(0.44, 0.25, 0.06);
+        if (lower.includes('driver')) return new THREE.Vector3(0, 0.5, 0.16);
+        if (lower.includes('ai_core') || lower.includes('chip') || lower.includes('board')) return new THREE.Vector3(0, 0.5, 0.36);
         if (lower.includes('fingerprint') || lower.includes('sensor')) return new THREE.Vector3(0.55, 0.45, 0.1);
+        if (lower.includes('battery_cell')) return new THREE.Vector3(0, 0.24, 0.56);
         if (lower.includes('battery') || lower.includes('front_oled_panel')) return new THREE.Vector3(0, -0.18, 0.52);
         if (lower.includes('lid') || lower.includes('adaptive')) return new THREE.Vector3(0, 0.46, -0.2);
         if (lower.includes('hologram')) return new THREE.Vector3(0, 0.72, 0);
@@ -174,18 +218,31 @@ ready(() => {
             mat.opacity = name.includes('lid') ? 0.36 : 0.3;
             mat.depthWrite = false;
             mat.metalness = 0.12;
-            mat.roughness = 0.12;
+            mat.roughness = 0.08;
+            mat.envMapIntensity = 1.45;
             mat.side = THREE.DoubleSide;
         }
         if (name.includes('obsidian') || name.includes('ceramic')) {
-            mat.color.set(0x02030a);
-            mat.metalness = 0.72;
-            mat.roughness = 0.16;
+            mat.color.set(0x04050c);
+            mat.metalness = 0.68;
+            mat.roughness = 0.1;
+            mat.envMapIntensity = 2.35;
         }
         if (name.includes('oled') || name.includes('panel')) {
             mat.color.set(0x01030b);
             mat.metalness = 0.22;
             mat.roughness = 0.08;
+            mat.envMapIntensity = 1.1;
+        }
+        if (name.includes('titanium')) {
+            mat.metalness = 0.9;
+            mat.roughness = 0.11;
+            mat.envMapIntensity = 2.1;
+        }
+        if (name.includes('silicone')) {
+            mat.color.set(0x0b0c13);
+            mat.roughness = 0.42;
+            mat.envMapIntensity = 0.85;
         }
         if (name.includes('cyan')) {
             mat.color.set(0x00f0ff);
@@ -215,15 +272,18 @@ ready(() => {
         partButtons.forEach((item) => {
             item.classList.toggle('is-active', item.dataset.viewerPart === activePart);
         });
+        setCameraPreset(activePart);
         setReadout();
     };
 
     const setOpenState = (nextOpen) => {
         targetProgress = nextOpen ? 1 : 0;
         mount.dataset.phase = nextOpen ? 'open' : (loaded ? 'sealed' : 'loading');
+        controls.autoRotate = !reducedMotion && !nextOpen;
         button.classList.toggle('is-open', nextOpen);
         button.setAttribute('aria-pressed', String(nextOpen));
-        button.textContent = nextOpen ? 'Собрать модель' : 'Разобрать в 3D';
+        button.textContent = nextOpen ? 'Собрать слои' : 'Раскрыть слои';
+        setCameraPreset(activePart);
         setReadout();
     };
 
@@ -267,7 +327,7 @@ ready(() => {
             const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z) || 1;
             model.position.sub(center);
-            model.scale.setScalar(4.58 / maxDim);
+            model.scale.setScalar(4.26 / maxDim);
             pivot.add(model);
 
             loaded = true;
@@ -333,6 +393,11 @@ ready(() => {
 
     const render = () => {
         updateModel();
+        if (cameraPresetFrames > 0) {
+            camera.position.lerp(cameraGoal, reducedMotion ? 1 : 0.035);
+            controls.target.lerp(targetGoal, reducedMotion ? 1 : 0.04);
+            cameraPresetFrames -= 1;
+        }
         controls.update();
         renderer.render(scene, camera);
         requestAnimationFrame(render);
