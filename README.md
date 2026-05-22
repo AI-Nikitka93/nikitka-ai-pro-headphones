@@ -2,6 +2,8 @@
 
 Premium fictional headphones portfolio site built as a static interactive product concept.
 
+Live site: https://nikitka-ai-pro-headphones.vercel.app/
+
 ## What is inside
 
 - Cinematic product hero with local optimized AVIF/WebP/JPG assets.
