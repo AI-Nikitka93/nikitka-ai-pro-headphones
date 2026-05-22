@@ -615,11 +615,70 @@ function initModelSwitcher() {
 }
 
 /* ==========================================================================
-   4. INTERACTIVE EXPLODED 3D VIEW
+   4. INTERACTIVE PRODUCT ANATOMY BOARD
    ========================================================================== */
 function initExplodedViewer() {
-    // The procedural WebGL product viewer is initialized by three-anatomy.js.
-    // This stub keeps the legacy initialization path harmless if app.js loads first.
+    const viewer = document.getElementById('exploded-viewer');
+    const scanButton = document.getElementById('anatomy-scan-toggle');
+    const progressFill = document.getElementById('anatomy-progress-fill');
+    const readout = document.getElementById('anatomy-readout');
+    const layerButtons = viewer ? viewer.querySelectorAll('[data-anatomy-layer]') : [];
+
+    if (!viewer || !scanButton) return;
+
+    const layerLabels = {
+        driver: '12 мм драйвер',
+        chip: 'NeuroCore AI',
+        case: 'OLED-кейс',
+        sensor: 'Сенсорная крышка'
+    };
+
+    let isOpen = false;
+    let activeLayer = 'driver';
+
+    const setActiveLayer = (layer) => {
+        activeLayer = layerLabels[layer] ? layer : 'driver';
+        layerButtons.forEach((button) => {
+            button.classList.toggle('is-active', button.dataset.anatomyLayer === activeLayer);
+        });
+        if (readout) {
+            readout.textContent = isOpen ? layerLabels[activeLayer] : 'Цельный продукт';
+        }
+    };
+
+    const setOpenState = (nextOpen) => {
+        isOpen = nextOpen;
+        viewer.dataset.phase = isOpen ? 'open' : 'sealed';
+        scanButton.classList.toggle('is-open', isOpen);
+        scanButton.setAttribute('aria-pressed', String(isOpen));
+        scanButton.textContent = isOpen ? 'Вернуть витрину' : 'Показать детали';
+        if (progressFill) {
+            progressFill.style.transform = `scaleX(${isOpen ? 1 : 0})`;
+        }
+        setActiveLayer(activeLayer);
+    };
+
+    scanButton.addEventListener('click', () => {
+        setOpenState(!isOpen);
+    });
+
+    layerButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            setOpenState(true);
+            setActiveLayer(button.dataset.anatomyLayer);
+        });
+    });
+
+    setOpenState(false);
+
+    window.NIKITKA_ANATOMY_BOARD = {
+        getState: () => ({
+            phase: viewer.dataset.phase,
+            activeLayer,
+            layerCount: layerButtons.length,
+            imageLoaded: Boolean(viewer.querySelector('.anatomy-product-image')?.complete)
+        })
+    };
 }
 
 /* ==========================================================================

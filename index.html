@@ -7,14 +7,7 @@
     <meta name="description" content="Премиальный портфолио-сайт вымышленных наушников Nikitka AI PRO: кинематографичный hero, интерактивная анатомия, живой радиотест и продуктовая motion-витрина.">
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="preload" as="image" href="assets/hero-cinematic-desktop.avif" imagesrcset="assets/hero-cinematic-mobile.avif 960w, assets/hero-cinematic-desktop.avif 1920w" imagesizes="100vw" type="image/avif" fetchpriority="high">
-    <link rel="stylesheet" href="style.css?v=20260522-three-anatomy">
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js"
-        }
-    }
-    </script>
+    <link rel="stylesheet" href="style.css?v=20260522-anatomy-board">
 </head>
 <body>
 
@@ -316,12 +309,12 @@
                     </div>
                 </div>
 
-                <!-- Procedural Three.js Exploded Product Viewer -->
+                <!-- Premium product anatomy board -->
                 <div class="exploded-panel glass-card">
                     <div class="exploded-copy-block">
                         <h3 class="exploded-title">Интерактивная Нейро-Анатомия</h3>
                         <p class="exploded-copy">
-                            Живая 3D-витрина раскрывает форму вкладыша: акустический носик, драйвер, AI-плата, батарея и сенсорная крышка расходятся в чистый product teardown.
+                            Реальный рендер Nikitka AI PRO, спокойный скан-слой и аккуратные точки конструкции вместо шумной технической схемы.
                         </p>
 
                         <div class="anatomy-control-strip">
@@ -345,11 +338,39 @@
                     </div>
                     
                     <div class="design-right exploded-design-stage">
-                        <div id="exploded-viewer" class="exploded-viewer three-product-viewer" data-phase="sealed">
-                            <canvas id="anatomy-canvas" class="anatomy-canvas" aria-label="Процедурная 3D-модель наушника Nikitka AI PRO"></canvas>
-                            <div class="anatomy-stage-vignette" aria-hidden="true"></div>
-                            <span class="anatomy-orbit-hint">REALTIME 3D</span>
-                            <div class="anatomy-runtime-fallback">WebGL-сцена недоступна в этом браузере</div>
+                        <div id="exploded-viewer" class="exploded-viewer anatomy-cinematic-viewer" data-phase="sealed">
+                            <img class="anatomy-product-image" src="assets/case_3d.png" alt="Nikitka AI PRO в зарядном кейсе с подсветкой">
+                            <div class="anatomy-vignette" aria-hidden="true"></div>
+                            <div class="anatomy-scan-beam" aria-hidden="true"></div>
+                            <span class="anatomy-orbit-hint">PRODUCT SCAN</span>
+
+                            <button class="anatomy-hotspot anatomy-hotspot-driver is-active" type="button" data-anatomy-layer="driver" aria-label="12 мм драйвер">
+                                <span></span>
+                            </button>
+                            <button class="anatomy-hotspot anatomy-hotspot-chip" type="button" data-anatomy-layer="chip" aria-label="NeuroCore AI">
+                                <span></span>
+                            </button>
+                            <button class="anatomy-hotspot anatomy-hotspot-case" type="button" data-anatomy-layer="case" aria-label="OLED-кейс">
+                                <span></span>
+                            </button>
+                            <button class="anatomy-hotspot anatomy-hotspot-sensor" type="button" data-anatomy-layer="sensor" aria-label="Сенсорная крышка">
+                                <span></span>
+                            </button>
+
+                            <div class="anatomy-layer-dock" aria-label="Слои конструкции">
+                                <button type="button" class="anatomy-layer-card is-active" data-anatomy-layer="driver">
+                                    <strong>Драйвер</strong>
+                                    <span>Точный центр звуковой сцены</span>
+                                </button>
+                                <button type="button" class="anatomy-layer-card" data-anatomy-layer="chip">
+                                    <strong>AI-плата</strong>
+                                    <span>Адаптивная обработка сигнала</span>
+                                </button>
+                                <button type="button" class="anatomy-layer-card" data-anatomy-layer="case">
+                                    <strong>Кейс</strong>
+                                    <span>Прозрачная архитектура и OLED</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -881,7 +902,6 @@
         </div>
     </footer>
 
-    <script type="module" src="three-anatomy.js?v=20260522-procedural-3d"></script>
-    <script src="app.js?v=20260522-three-anatomy"></script>
+    <script src="app.js?v=20260522-anatomy-board"></script>
 </body>
 </html>
