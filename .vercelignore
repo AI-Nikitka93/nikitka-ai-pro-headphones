@@ -1,0 +1,16 @@
+.git/
+.playwright-mcp/
+.qa/
+
+ChatGPT Image *.png
+assets/Luxury_macro_product_hero_loop_*.jpeg
+assets/Earbuds_explode_into_layers_*.mp4
+assets/Futuristic_earbuds_exploded_view_*.mp4
+assets/Luxury_cinematic_product_video_*.mp4
+assets/inside-nikitka-ai-pro-alt-clean.mp4
+assets/inside-nikitka-ai-pro-clean.mp4
+assets/inside-nikitka-ai-pro-alt-poster.jpg
+assets/inside-nikitka-ai-pro-poster.jpg
+assets/test_crop_*.png
+assets/screenshot_*.png
+assets/hero_pedestal*.png

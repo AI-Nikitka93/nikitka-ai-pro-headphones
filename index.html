@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIKITKA AI PRO — Premium Fictional Headphones Portfolio</title>
+    <meta name="description" content="Премиальный портфолио-сайт вымышленных наушников Nikitka AI PRO: кинематографичный hero, интерактивная анатомия, живой радиотест и продуктовая motion-витрина.">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="preload" as="image" href="assets/hero-cinematic-desktop.avif" imagesrcset="assets/hero-cinematic-mobile.avif 960w, assets/hero-cinematic-desktop.avif 1920w" imagesizes="100vw" type="image/avif" fetchpriority="high">
+    <link rel="stylesheet" href="style.css?v=20260522-spacing-2">
+</head>
+<body>
+
+    <!-- Dynamic Particle Grid Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container navbar">
+            <a href="#hero" class="brand-logo">
+                Nikitka AI <span class="logo-badge">PRO</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#hero" class="active">Главная</a></li>
+                <li><a href="#tech">Технологии</a></li>
+                <li><a href="#design">Дизайн</a></li>
+                <li><a href="#inside">Анатомия</a></li>
+                <li><a href="#showcase">Возможности</a></li>
+                <li><a href="#simulator">Аудио-Тест</a></li>
+                <li><a href="#assistant">Ассистент</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div class="nav-cta">
+                <a href="#simulator" class="btn-primary">
+                    Демо
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <button class="menu-toggle" aria-label="Toggle Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="hero">
+            <picture class="hero-cinema-bg" aria-hidden="true">
+                <source media="(max-width: 768px)" srcset="assets/hero-cinematic-mobile.avif" type="image/avif">
+                <source media="(max-width: 768px)" srcset="assets/hero-cinematic-mobile.webp" type="image/webp">
+                <source srcset="assets/hero-cinematic-desktop.avif" type="image/avif">
+                <source srcset="assets/hero-cinematic-desktop.webp" type="image/webp">
+                <img src="assets/hero-cinematic-desktop.jpg" alt="" class="hero-cinema-img" fetchpriority="high" decoding="async">
+            </picture>
+            <div class="hero-cinema-overlay" aria-hidden="true"></div>
+            <div class="container hero-grid">
+                
+                <!-- Left Column: Product Information -->
+                <div class="hero-text">
+                    <span class="tagline">Fictional premium audio concept</span>
+                    <h1 class="hero-title">
+                        NIKITKA AI
+                        <span class="glow-title">PRO</span>
+                    </h1>
+                    <p class="hero-desc">
+                        Вымышленный флагман для портфолио: нейро-звук, живое радио и кинематографичный разбор устройства в одном интерактивном сайте.
+                    </p>
+                    
+                    <div class="hero-bullets">
+                        <div class="bullet-item">
+                            <span class="bullet-icon">✓</span>
+                            <span>Живой тест радиостанций</span>
+                        </div>
+                        <div class="bullet-item">
+                            <span class="bullet-icon">✓</span>
+                            <span>Интерактивная анатомия</span>
+                        </div>
+                        <div class="bullet-item">
+                            <span class="bullet-icon">✓</span>
+                            <span>OLED-кейс и AI-режимы</span>
+                        </div>
+                        <div class="bullet-item">
+                            <span class="bullet-icon">✓</span>
+                            <span>Премиальная motion-витрина</span>
+                        </div>
+                    </div>
+
+                    <div class="hero-actions">
+                        <a href="#simulator" class="btn-primary">
+                            Слушать радио
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                        <a href="#inside" class="btn-secondary">
+                            Разобрать внутри
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21"></polygon>
+                            </svg>
+                        </a>
+                    </div>
+                    <span class="available-date">Portfolio launch concept · 2026</span>
+                </div>
+
+                <!-- Central Column: Exact pedestal and floating earbuds cropped from Mockup 1 -->
+                <div class="hero-visual">
+                    <div class="holo-stage">
+                        <div class="holo-ring-outer"></div>
+                        <div class="holo-pedestal"></div>
+                        <div class="holo-glow"></div>
+                        
+                        <div class="product-case-wrap" data-tilt-card>
+                            <img src="assets/hero_product_clean.png?v=1" alt="Nikitka AI PRO charging case with floating earbuds" class="hero-pedestal-img">
+                            <div class="hero-scanline"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Sidebar Dashboard Widgets -->
+                <div class="hero-dashboard">
+                    <!-- Card 1: System Specs -->
+                    <div class="dash-widget">
+                        <span class="widget-sub">СИСТЕМА</span>
+                        <h4 class="widget-main-title">NIKITKA AI</h4>
+                        <ul class="specs-bullets-list">
+                            <li><span>—</span> Adaptive EQ engine</li>
+                            <li><span>—</span> Smart ANC profile</li>
+                            <li><span>—</span> Radio preview mode</li>
+                            <li><span>—</span> Teardown motion layer</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 2: Audio Live Waveform -->
+                    <div class="dash-widget">
+                        <div class="widget-topline">
+                            <span class="widget-sub">звук будущего</span>
+                            <span class="speaker-icon">96</span>
+                        </div>
+                        <div class="widget-wave">
+                            <div class="wave-bars">
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                            </div>
+                            <div class="widget-info">
+                                <span class="freq">96 kHz / 24 bit</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: 360° indicator -->
+                    <div class="dash-widget widget-row">
+                        <div class="signal-stack" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span class="angle-indicator">360° product view</span>
+                    </div>
+
+                    <!-- Card 4: Joined Audience -->
+                    <div class="dash-widget">
+                        <span class="widget-sub">ПОРТФОЛИО-СБОРКА</span>
+                        <div class="users-info-box">
+                            <strong>Image · Video · Radio</strong>
+                            <span>все ассеты проверяются в браузере</span>
+                        </div>
+                    </div>
+
+                    <div class="hero-quick-rail" aria-hidden="true">
+                        <span>AI</span>
+                        <span>ANC</span>
+                        <span>360</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Features Section ("ТЕХНОЛОГИИ БУДУЩЕГО") -->
+        <section id="tech" class="tech-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">КОНЦЕПТ-ТЕХНОЛОГИИ</span>
+                    <h2 class="section-title">Технологии будущего</h2>
+                    <p class="section-kicker">Пять коротких сценариев показывают, чем могла бы отличаться гарнитура в реальном продукте.</p>
+                </div>
+                
+                <div class="tech-grid">
+                    <!-- Card 1 -->
+                    <div class="tech-card">
+                        <div class="tech-icon-wrap">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                                <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+                                <line x1="12" y1="19" x2="12" y2="22"></line>
+                            </svg>
+                        </div>
+                        <h3>NeuroSound AI</h3>
+                        <p>Демо-профиль адаптирует сцену, бас и детализацию под выбранный режим прослушивания.</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="tech-card">
+                        <div class="tech-icon-wrap">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                            </svg>
+                        </div>
+                        <h3>Live Translate Concept</h3>
+                        <p>Сценарий ассистента показывает, как мог бы выглядеть перевод речи прямо в гарнитуре.</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="tech-card">
+                        <div class="tech-icon-wrap">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44"></path>
+                                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44"></path>
+                            </svg>
+                        </div>
+                        <h3>Focus Gesture</h3>
+                        <p>Футуристичный режим фокуса: сайт демонстрирует идею управления через жесты и внимание.</p>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="tech-card">
+                        <div class="tech-icon-wrap">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
+                        <h3>Adaptive ANC 2.0</h3>
+                        <p>Визуальный сценарий умного шумоподавления для улицы, студии и спокойного прослушивания.</p>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="tech-card">
+                        <div class="tech-icon-wrap">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect>
+                                <line x1="22" y1="11" x2="22" y2="13"></line>
+                            </svg>
+                        </div>
+                        <h3>Energy System</h3>
+                        <p>Концепт-кейс с OLED-индикатором, магнитной посадкой и беспроводной зарядкой.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Focus Section ("ДИЗАЙН БЕЗ ГРАНИЦ") -->
+        <section id="design" class="design-section">
+            <div class="container">
+                <span class="section-tag design-section-tag">ДИЗАЙН БЕЗ ГРАНИЦ</span>
+                
+                <div class="design-card-container glass-card">
+                    <!-- Left side text content -->
+                    <div class="design-card-left">
+                        <h2 class="design-card-title">Эстетика.<br>Технологии.<br>Будущее.</h2>
+                        <p class="design-card-desc">
+                            Визуальный язык Nikitka AI PRO строится вокруг прозрачного кейса, холодного стекла, мягкой подсветки и интерфейса, который хочется рассматривать крупным планом.
+                        </p>
+                        <a href="#simulator" class="btn-primary">
+                            Исследовать дизайн
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Middle side: Cropped actual image from mockup -->
+                    <div class="design-card-middle">
+                        <img src="assets/earbud_in_ear.png" alt="Earbud in Ear Close-up" class="earbud-in-ear-img">
+                    </div>
+
+                    <!-- Right side specifications aligned exactly with mockup -->
+                    <div class="design-card-right">
+                        <div class="design-spec-row">
+                            <span class="design-spec-number">4.2 г</span>
+                            <span class="design-spec-lbl">Вес одного наушника</span>
+                        </div>
+                        <div class="design-spec-row">
+                            <span class="design-spec-number">IPX7</span>
+                            <span class="design-spec-lbl">Защита от воды и пота</span>
+                        </div>
+                        <div class="design-spec-row">
+                            <span class="design-spec-number">Qi 2.0</span>
+                            <span class="design-spec-lbl">Беспроводная зарядка</span>
+                        </div>
+                        <div class="design-spec-row">
+                            <span class="design-spec-number">24 ч</span>
+                            <span class="design-spec-lbl">Работа без подзарядки</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3D Exploded Interactive Sub-Panel -->
+                <div class="exploded-panel glass-card">
+                    <div>
+                        <h3 class="exploded-title">Интерактивная Нейро-Анатомия</h3>
+                        <p class="exploded-copy">
+                            Передвигайте ползунок, чтобы заглянуть внутрь гарнитуры. Это стилизованный технический разбор: драйвер, сенсорная зона, чип управления и защитный корпус разнесены на слои.
+                        </p>
+                        
+                        <div class="viewer-slider-wrap exploded-slider-wrap">
+                            <span class="slider-label">Переместить для разбора на слои:</span>
+                            <input id="explode-slider" type="range" class="interactive-slider exploded-slider" min="0" max="100" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="design-right exploded-design-stage">
+                        <div id="exploded-viewer" class="exploded-viewer">
+                            <!-- Shared definitions for premium gradients and glow filters -->
+                            <svg class="svg-defs">
+                                <defs>
+                                    <linearGradient id="neon-blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#00f0ff" stop-opacity="1" />
+                                        <stop offset="100%" stop-color="#0072ff" stop-opacity="0.3" />
+                                    </linearGradient>
+                                    <linearGradient id="neon-purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#a855f7" stop-opacity="1" />
+                                        <stop offset="100%" stop-color="#8a2be2" stop-opacity="0.3" />
+                                    </linearGradient>
+                                    <radialGradient id="neon-glow" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.8" />
+                                        <stop offset="50%" stop-color="#8a2be2" stop-opacity="0.3" />
+                                        <stop offset="100%" stop-color="transparent" stop-opacity="0" />
+                                    </radialGradient>
+                                    <filter id="glow-filter" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feGaussianBlur stdDeviation="5" result="blur" />
+                                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                    </filter>
+                                </defs>
+                            </svg>
+
+                            <!-- Layer 4: Shell Casing -->
+                            <svg class="layer-img layer-shell" viewBox="0 0 120 180" width="140">
+                                <path d="M60 15 C30 15, 15 45, 15 90 C15 135, 45 165, 60 165 C75 165, 105 135, 105 90 C105 45, 90 15, 60 15 Z" fill="none" stroke="url(#neon-blue-grad)" stroke-width="2" stroke-dasharray="4 4" filter="url(#glow-filter)"/>
+                                <path d="M60 25 C35 25, 25 50, 25 90 C25 130, 35 155, 60 155 C85 155, 95 130, 95 90 C95 50, 85 25, 60 25 Z" fill="rgba(8, 6, 20, 0.4)" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.6"/>
+                            </svg>
+                            
+                            <!-- Layer 3: Driver Speaker Coil -->
+                            <svg class="layer-img layer-driver" viewBox="0 0 120 180" width="140">
+                                <circle cx="60" cy="90" r="38" fill="none" stroke="url(#neon-purple-grad)" stroke-width="3" filter="url(#glow-filter)"/>
+                                <circle cx="60" cy="90" r="28" fill="none" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+                                <circle cx="60" cy="90" r="18" fill="none" stroke="#a855f7" stroke-width="2" stroke-opacity="0.8"/>
+                                <circle cx="60" cy="90" r="8" fill="#ffffff" filter="url(#glow-filter)"/>
+                                <line x1="60" y1="40" x2="60" y2="50" stroke="#00f0ff" stroke-width="2" stroke-opacity="0.7"/>
+                                <line x1="60" y1="130" x2="60" y2="140" stroke="#00f0ff" stroke-width="2" stroke-opacity="0.7"/>
+                                <line x1="20" y1="90" x2="30" y2="90" stroke="#00f0ff" stroke-width="2" stroke-opacity="0.7"/>
+                                <line x1="90" y1="90" x2="100" y2="90" stroke="#00f0ff" stroke-width="2" stroke-opacity="0.7"/>
+                            </svg>
+
+                            <!-- Layer 2: Motherboard Chip -->
+                            <svg class="layer-img layer-board" viewBox="0 0 120 180" width="140">
+                                <rect x="35" y="65" width="50" height="50" rx="8" fill="rgba(6, 4, 15, 0.9)" stroke="#8a2be2" stroke-width="2"/>
+                                <rect x="47" y="77" width="26" height="26" rx="4" fill="url(#neon-blue-grad)" filter="url(#glow-filter)"/>
+                                <text x="60" y="94" font-family="'Outfit', sans-serif" font-size="7" font-weight="bold" fill="#000" text-anchor="middle">AI</text>
+                                <path d="M25 60 L35 75 M95 60 L85 75 M25 120 L35 105 M95 120 L85 105" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.7"/>
+                                <circle cx="25" cy="60" r="3" fill="#00f0ff" filter="url(#glow-filter)"/>
+                                <circle cx="95" cy="60" r="3" fill="#00f0ff" filter="url(#glow-filter)"/>
+                                <circle cx="25" cy="120" r="3" fill="#00f0ff" filter="url(#glow-filter)"/>
+                                <circle cx="95" cy="120" r="3" fill="#00f0ff" filter="url(#glow-filter)"/>
+                            </svg>
+
+                            <!-- Layer 1: Touch Plate Front -->
+                            <svg class="layer-img layer-case" viewBox="0 0 120 180" width="140">
+                                <path d="M60 25 C35 25, 25 50, 25 90 C25 130, 35 155, 60 155 C85 155, 95 130, 95 90 C95 50, 85 25, 60 25 Z" fill="rgba(10, 8, 26, 0.85)" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2" filter="url(#glow-filter)"/>
+                                <circle cx="60" cy="90" r="22" fill="url(#neon-glow)" filter="url(#glow-filter)"/>
+                                <circle cx="60" cy="90" r="14" fill="none" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.8"/>
+                                <path d="M60 68 L60 76 M60 104 L60 112" stroke="#8a2be2" stroke-width="2" stroke-opacity="0.8"/>
+                            </svg>
+
+                            <span class="viewer-label lbl-shell">Корпус</span>
+                            <span class="viewer-label lbl-driver">12мм Драйвер</span>
+                            <span class="viewer-label lbl-board">Чип AI</span>
+                            <span class="viewer-label lbl-case">Сенсор</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Cinematic Inside Section -->
+        <section id="inside" class="inside-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">ИНТЕРАКТИВНАЯ АНАТОМИЯ</span>
+                    <h2 class="section-title">Внутри Nikitka AI PRO</h2>
+                    <p class="section-kicker">
+                        Кинематографичный разбор наушников: выбирай слой, а ролик мягко переходит к нужной детали.
+                    </p>
+                </div>
+
+                <div class="inside-grid">
+                    <div class="inside-video-stage">
+                        <div class="inside-stage-top">
+                            <span class="inside-eyebrow">Exploded motion / 8 sec</span>
+                            <span class="inside-live-dot">Live anatomy</span>
+                        </div>
+
+                        <div class="inside-media-frame">
+                            <video id="inside-video" class="inside-video" autoplay muted loop playsinline preload="metadata" poster="assets/inside-nikitka-ai-pro-selected-poster.jpg">
+                                <source src="assets/inside-nikitka-ai-pro-selected.mp4" type="video/mp4">
+                            </video>
+                            <div class="inside-video-vignette" aria-hidden="true"></div>
+                            <div class="inside-scanline" aria-hidden="true"></div>
+                            <div class="inside-brand-plate" aria-hidden="true">
+                                <strong>NIKITKA AI PRO</strong>
+                                <span>Neural audio core</span>
+                            </div>
+                            <div class="inside-hotspot inside-hotspot-driver"><span></span>12 мм драйвер</div>
+                            <div class="inside-hotspot inside-hotspot-chip"><span></span>NeuroCore AI</div>
+                            <div class="inside-hotspot inside-hotspot-shell"><span></span>Стеклокарбон</div>
+                        </div>
+
+                        <div class="inside-control-row" aria-label="Управление роликом анатомии">
+                            <button id="inside-toggle" class="inside-toggle" type="button" aria-label="Поставить ролик на паузу">
+                                <span id="inside-toggle-label">Пауза</span>
+                            </button>
+                            <div class="inside-progress-track" aria-hidden="true">
+                                <span id="inside-progress"></span>
+                            </div>
+                            <span id="inside-timecode" class="inside-timecode">00:00</span>
+                        </div>
+                    </div>
+
+                    <aside class="inside-panel" aria-label="Слои Nikitka AI PRO">
+                        <span class="inside-panel-tag">Product teardown</span>
+                        <h3>Слой за слоем, как премиальный гаджет.</h3>
+                        <p>
+                            Корпус, драйвер, чип, микрофоны и батарея собраны в одну чистую внутреннюю архитектуру без визуального шума.
+                        </p>
+
+                        <div class="inside-layer-tabs" role="tablist" aria-label="Выбор слоя наушников">
+                            <button class="inside-layer-btn active" type="button" data-layer="shell" data-inside-time="0.7" aria-pressed="true">
+                                <span>01</span> Корпус
+                            </button>
+                            <button class="inside-layer-btn" type="button" data-layer="driver" data-inside-time="1.9" aria-pressed="false">
+                                <span>02</span> Драйвер
+                            </button>
+                            <button class="inside-layer-btn" type="button" data-layer="chip" data-inside-time="3.2" aria-pressed="false">
+                                <span>03</span> Чип
+                            </button>
+                            <button class="inside-layer-btn" type="button" data-layer="anc" data-inside-time="4.8" aria-pressed="false">
+                                <span>04</span> ANC
+                            </button>
+                            <button class="inside-layer-btn" type="button" data-layer="battery" data-inside-time="6.2" aria-pressed="false">
+                                <span>05</span> Питание
+                            </button>
+                        </div>
+
+                        <div class="inside-layer-readout" aria-live="polite">
+                            <span id="inside-layer-metric" class="inside-layer-metric">0.8 мм оболочка</span>
+                            <h4 id="inside-layer-title">Прозрачный стеклокарбон</h4>
+                            <p id="inside-layer-text">
+                                Полупрозрачный корпус показывает внутреннюю архитектуру, защищает электронику и оставляет световой контур по кромке наушника.
+                            </p>
+                        </div>
+
+                        <div class="inside-spec-strip">
+                            <span>8 сек</span>
+                            <span>HD-витрина</span>
+                            <span>5 слоев</span>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Switcher Section with ultra-premium 3D model from Mockup 2 -->
+        <section id="showcase">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">ВЫБЕРИ СВОЙ ДЕВАЙС</span>
+                    <h2 class="section-title">Три премиальных решения</h2>
+                </div>
+
+                <!-- Selector Tab Buttons -->
+                <div class="showcase-selector">
+                    <button class="selector-btn" data-model="lite">
+                        Nikitka AI Lite <span class="btn-badge">Daily</span>
+                    </button>
+                    <button class="selector-btn active" data-model="pro">
+                        Nikitka AI PRO <span class="btn-badge">Flagship</span>
+                    </button>
+                    <button class="selector-btn" data-model="ultra">
+                        Nikitka AI Ultra <span class="btn-badge">Extreme</span>
+                    </button>
+                </div>
+
+                <!-- Content Panel -->
+                <div class="showcase-content">
+                    
+                    <!-- Dynamic Visualizer Left (Displays gorgeous high-res Mockup 2 case) -->
+                    <div class="showcase-visual">
+                        <div class="showcase-glow-circle"></div>
+                        <div class="case-orbit-shell">
+                            <div class="orbit-hud top">Optical 3D copy</div>
+                            <div class="orbit-hud bottom">mockup-accurate product lab</div>
+                            <div class="orbit-hotspot hotspot-a"><span></span>NeuroTouch</div>
+                            <div class="orbit-hotspot hotspot-b"><span></span>OLED case UI</div>
+                        </div>
+                        <div class="showcase-image-wrap" data-tilt-card>
+                            <img id="showcase-image" src="assets/case_3d.png" alt="Nikitka AI PRO 3D Metallic Charging Case" class="showcase-main-img-3d">
+                        </div>
+                    </div>
+
+                    <!-- Details Info Right -->
+                    <div class="showcase-info">
+                        <h3 id="model-title" class="model-name">Nikitka AI <span class="neon-text-purple">PRO</span></h3>
+                        <p id="model-desc" class="model-desc">
+                            Главный портфолио-концепт: прозрачный OLED-кейс, живой радиотест, кинематографичная анатомия и интерактивные аудио-режимы.
+                        </p>
+
+                        <!-- Specifications cards -->
+                        <div class="model-features">
+                            <div class="m-feat-card">
+                                <span class="m-feat-title">Вес наушника</span>
+                                <span id="spec-weight" class="m-feat-val">4.2 г</span>
+                            </div>
+                            <div class="m-feat-card">
+                                <span class="m-feat-title">Автономность</span>
+                                <span id="spec-battery" class="m-feat-val">До 24 часов</span>
+                            </div>
+                            <div class="m-feat-card">
+                                <span class="m-feat-title">Шумоподавление</span>
+                                <span id="spec-anc" class="m-feat-val">Adaptive ANC concept</span>
+                            </div>
+                            <div class="m-feat-card">
+                                <span class="m-feat-title">Сопроцессор</span>
+                                <span id="spec-chip" class="m-feat-val">NeuroCore AI PRO</span>
+                            </div>
+                            <div class="m-feat-card">
+                                <span class="m-feat-title">Аудиофильский чип</span>
+                                <span id="spec-sound" class="m-feat-val">96 kHz / 24 bit HD</span>
+                            </div>
+                            <div class="m-feat-card">
+                                <span class="m-feat-title">Фокус-режим</span>
+                                <span id="spec-mind" class="m-feat-val">Focus Gesture demo</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a href="#simulator" class="btn-primary showcase-demo-link">Слушать демо</a>
+                        </div>
+
+                        <div class="orbit-control-panel" aria-label="3D view controls">
+                            <button class="orbit-btn active" data-orbit="hero">Case orbit</button>
+                            <button class="orbit-btn" data-orbit="buds">Earbud detail</button>
+                            <button class="orbit-btn" data-orbit="explode">Exploded glow</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Audio Simulator Section ("Аудио-Тест") -->
+        <section id="simulator">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">ЖИВОЙ ЗВУК ОНЛАЙН</span>
+                    <h2 class="section-title">Послушай радио через Nikitka AI</h2>
+                    <p class="section-kicker">Публичные бесплатные потоки SomaFM подключены напрямую: выбирай станцию и переключай профили звучания на лету.</p>
+                </div>
+
+                <div class="audio-dashboard-grid">
+                    
+                    <!-- Equalizer & Audio Routing Console -->
+                    <div class="audio-console">
+                        
+                        <!-- Console Header -->
+                        <div class="console-header">
+                            <div>
+                                <h3 class="console-title">Нейро-Эквалайзер</h3>
+                                <span id="station-now" class="station-now-text">SomaFM Groove Salad • 128 kbps MP3</span>
+                            </div>
+                            <div class="live-badge">
+                                <span class="blink-dot"></span>
+                                <span id="stream-status">Ready</span>
+                            </div>
+                        </div>
+
+                        <!-- Music station Selector and Player Controls -->
+                        <div class="console-controls">
+                            <select id="radio-select" class="radio-select">
+                                <option value="groove">SomaFM: Groove Salad (Chillout / Ambient)</option>
+                                <option value="drone">SomaFM: Drone Zone (Deep Ambient)</option>
+                                <option value="deep">SomaFM: Deep Space One (Space Electronic)</option>
+                                <option value="spacestation">SomaFM: Space Station Soma (Cosmic Beats)</option>
+                                <option value="defcon">SomaFM: DEF CON Radio (Hacker Electro)</option>
+                                <option value="mission">SomaFM: Mission Control (NASA ambient scans)</option>
+                            </select>
+                            
+                            <button id="play-btn" class="btn-play" aria-label="Play/Pause">
+                                <svg class="play-icon-symbol" viewBox="0 0 24 24" width="22" height="22" fill="#000">
+                                    <polygon points="5 3 19 12 5 21"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="station-readout">
+                            <div>
+                                <span class="readout-label">станция</span>
+                                <strong id="station-title">Groove Salad</strong>
+                                <p id="station-desc">Ambient/downtempo beats and chilled grooves.</p>
+                            </div>
+                            <div class="stream-specs">
+                                <span id="station-codec">MP3</span>
+                                <span id="station-bitrate">128 kbps</span>
+                                <span>free stream</span>
+                            </div>
+                        </div>
+
+                        <div class="stream-pill-grid">
+                            <button class="station-pill active" data-station="groove">Chill</button>
+                            <button class="station-pill" data-station="drone">Sleep</button>
+                            <button class="station-pill" data-station="deep">Space</button>
+                            <button class="station-pill" data-station="defcon">Cyber</button>
+                        </div>
+
+                        <!-- Equalizer presets -->
+                        <div>
+                            <span class="eq-section-label">Профили звука в наушниках:</span>
+                            <div class="eq-grid">
+                                <button class="eq-btn active" data-eq="bypass">
+                                    <svg viewBox="0 0 24 24">
+                                        <line x1="4" y1="21" x2="4" y2="14"></line>
+                                        <line x1="4" y1="10" x2="4" y2="3"></line>
+                                        <circle cx="4" cy="12" r="2" fill="currentColor"></circle>
+                                        <circle cx="12" cy="10" r="2" fill="currentColor"></circle>
+                                        <circle cx="20" cy="14" r="2" fill="currentColor"></circle>
+                                    </svg>
+                                    <span class="eq-btn-label">Bypass</span>
+                                </button>
+                                
+                                <button class="eq-btn" data-eq="neuro">
+                                    <svg viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M12 2a14.5 14.5 0 0 0 0 20"></path>
+                                    </svg>
+                                    <span class="eq-btn-label">NeuroSound</span>
+                                </button>
+
+                                <button class="eq-btn" data-eq="anc">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10z"></path>
+                                    </svg>
+                                    <span class="eq-btn-label">Adaptive ANC</span>
+                                </button>
+
+                                <button class="eq-btn" data-eq="mind">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15"></path>
+                                        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15"></path>
+                                    </svg>
+                                    <span class="eq-btn-label">Brain Focus</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Focus concept slider -->
+                        <div id="focus-widget-card" class="eq-slider-card disabled">
+                            <div class="slider-info">
+                                <span>Степень концентрации мысли</span>
+                                <strong id="focus-val">50%</strong>
+                            </div>
+                            <input id="focus-slider" type="range" class="vol-slider" min="0" max="100" value="50">
+                        </div>
+
+                        <!-- Master Volume -->
+                        <div class="vol-control">
+                            <svg class="volume-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                            <input id="volume-slider" type="range" class="vol-slider" min="0" max="100" value="65">
+                        </div>
+
+                        <div class="radio-source-note">
+                            Источник потоков: SomaFM. Каталог/API для расширения: Radio Browser, без ключа и с публичными зеркалами.
+                        </div>
+
+                    </div>
+
+                    <!-- Right active canvas spectrogram visualizer -->
+                    <div class="visualizer-card">
+                        <div class="visualizer-head">
+                            <h3 class="visualizer-title">Нейронный Спектрограф</h3>
+                            <span class="visualizer-subtitle">Активность аудио-сигнала в реальном времени</span>
+                        </div>
+                        <canvas id="visualizer" class="visualizer-canvas"></canvas>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive AI Chat Assistant Section ("ТВОЙ AI-АССИСТЕНТ") -->
+        <section id="assistant" class="assistant-section">
+            <div class="container">
+                
+                <div class="ai-assistant-grid">
+                    
+                    <!-- Left side: assistant information exactly word-by-word with mockup -->
+                    <div class="assistant-text-left">
+                        <span class="section-tag">ТВОЙ AI-АССИСТЕНТ</span>
+                        <h2 class="section-title assistant-title">Nikitka AI внутри</h2>
+                        <p class="hero-desc">
+                            Демо-ассистент показывает сценарии будущей гарнитуры: подсказки, перевод, подбор радиостанции и настройку профиля фокуса без реальной отправки личных данных.
+                        </p>
+                        <a href="#simulator" class="btn-primary chat-trigger-btn" id="btn-chat-trigger">
+                            <svg class="mic-icon chat-trigger-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <path d="M12 19v3"></path>
+                            </svg>
+                            Поговорить с AI
+                        </a>
+                    </div>
+
+                    <!-- Right side: Beautiful visual chat thread client with voice synthesis -->
+                    <div class="chat-panel">
+                        <!-- Chat Header -->
+                        <div class="chat-header">
+                            <span class="chat-status-dot"></span>
+                            <div class="chat-title">
+                                <h4>Ассистент Nikitka AI</h4>
+                                <span>Онлайн • Синхронизирован с гарнитурой</span>
+                            </div>
+                        </div>
+
+                        <!-- Message flow -->
+                        <div id="chat-messages" class="chat-messages">
+                            <div class="message-bubble ai">
+                                <div>Привет. Я демо-ассистент Nikitka AI: могу показать перевод, подобрать аудио-сценарий, объяснить режим фокуса или отправить тебя к радиотесту. Что проверим?</div>
+                                <span class="message-meta">Nikitka AI • 12:00</span>
+                            </div>
+                        </div>
+
+                        <!-- Suggestions chips -->
+                        <div class="chat-suggestions">
+                            <button class="suggestion-chip" data-trigger="weather">Какая погода завтра?</button>
+                            <button class="suggestion-chip" data-trigger="translate">Переведи на японский</button>
+                            <button class="suggestion-chip" data-trigger="cafe">Найди лучшее кафе рядом</button>
+                            <button class="suggestion-chip" data-trigger="focus">Покажи режим фокуса</button>
+                        </div>
+
+                        <!-- Chat input Area -->
+                        <div class="chat-input-area">
+                            <!-- Speak synthesis toggle -->
+                            <button id="btn-voice" class="voice-toggle-btn" title="Включить голосовое озвучивание ассистента">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                </svg>
+                            </button>
+                            
+                            <input id="chat-input" type="text" class="chat-input" placeholder="Задай вопрос ИИ ассистенту...">
+                            
+                            <button id="btn-send" class="btn-send" aria-label="Send">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</span>
+                    <h2 class="section-title faq-title">Всё, что вы хотели знать</h2>
+                </div>
+
+                <div class="faq-grid">
+                    <!-- Item 1 -->
+                    <div class="faq-item">
+                        <div class="faq-question">Это реальный продукт или портфолио-концепт?</div>
+                        <div class="faq-answer">
+                            Это вымышленный premium audio concept для портфолио. Сайт показывает продуктовую подачу, motion, видео-анатомию, радиодемо и интерфейсные сценарии без заявления, что устройство уже продается.
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="faq-item">
+                        <div class="faq-question">Что здесь работает по-настоящему?</div>
+                        <div class="faq-answer">
+                            Работают интерфейс сайта, локальные изображения и видео, интерактивная анатомия, переключение моделей, аудио-визуализатор и бесплатные публичные радиопотоки SomaFM. Нейро-функции и характеристики устройства являются частью концепта.
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="faq-item">
+                        <div class="faq-question">Почему добавлен радиотест?</div>
+                        <div class="faq-answer">
+                            Радиотест делает сайт живым: пользователь может не только смотреть на вымышленный продукт, но и включить реальный поток, увидеть спектрограф и почувствовать, как мог бы выглядеть audio-control layer.
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="faq-item">
+                        <div class="faq-question">Нужны ли аккаунты, ключи или платные сервисы?</div>
+                        <div class="faq-answer">
+                            Нет. Сайт статический, медиа лежат локально в проекте, а радиостанции подключены через публичные бесплатные потоки. Чат-ассистент является браузерной демо-симуляцией.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-grid">
+            
+            <div class="footer-col">
+                <a href="#hero" class="brand-logo footer-brand">Nikitka AI <span class="logo-badge">PRO</span></a>
+                <p class="footer-copy">
+                    Вымышленный premium audio concept для портфолио: изображения, видео, радио и motion-сцены собраны в один интерактивный продуктовый сайт.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h5>Навигация</h5>
+                <ul class="footer-links">
+                    <li><a href="#hero">Главная</a></li>
+                    <li><a href="#tech">Технологии</a></li>
+                    <li><a href="#design">Дизайн</a></li>
+                    <li><a href="#inside">Анатомия</a></li>
+                    <li><a href="#showcase">Модели</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h5>Концепты</h5>
+                <ul class="footer-links">
+                    <li><a href="#showcase">Nikitka AI Lite</a></li>
+                    <li><a href="#showcase">Nikitka AI PRO</a></li>
+                    <li><a href="#showcase">Nikitka AI Ultra</a></li>
+                    <li><a href="#inside">Анатомия устройства</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h5>Портфолио-контакт</h5>
+                <p class="footer-contact-copy">
+                    Оставьте email как демо-действие: форма показывает состояние интерфейса, без реальной отправки данных.
+                </p>
+                <form class="newsletter-form" id="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="Ваш Email" required>
+                    <button type="submit" class="btn-primary btn-small">ОК</button>
+                </form>
+                <p class="newsletter-status" id="newsletter-status" aria-live="polite"></p>
+            </div>
+
+        </div>
+
+        <div class="container footer-bottom">
+            <span>&copy; 2026 Nikitka AI PRO concept. Портфолио-сайт вымышленного продукта.</span>
+            <div class="footer-legal">
+                <a href="#faq" class="footer-legal-link">Конфиденциальность</a>
+                <a href="#faq" class="footer-legal-link">Условия использования</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js?v=20260522-spacing-2"></script>
+</body>
+</html>
