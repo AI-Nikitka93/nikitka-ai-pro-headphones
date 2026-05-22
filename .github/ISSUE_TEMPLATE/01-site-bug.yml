@@ -1,0 +1,61 @@
+name: Site display bug
+description: Report a reproducible problem in the live portfolio site.
+title: "[Site bug]: "
+labels: ["bug", "site"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for visual, responsive, browser, video, audio, or 3D viewer bugs.
+        Do not include security exploit details here; use the security policy instead.
+  - type: input
+    id: url
+    attributes:
+      label: Page or route
+      description: Paste the exact URL or hash route.
+      placeholder: https://nikitka-ai-pro-headphones.vercel.app/#product-3d
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Edge
+        - Firefox
+        - Safari
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: viewport
+    attributes:
+      label: Viewport or device
+      placeholder: 390x844 mobile, 1440x900 desktop, iPhone 15, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the visible problem and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshot, console error, or notes
+      description: Attach screenshots or paste non-sensitive console output.
+    validations:
+      required: false

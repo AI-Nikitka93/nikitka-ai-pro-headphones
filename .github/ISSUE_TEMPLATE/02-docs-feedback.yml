@@ -1,0 +1,26 @@
+name: Documentation feedback
+description: Report unclear README, docs, links, or project packaging text.
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: textarea
+    id: location
+    attributes:
+      label: Where is the issue?
+      placeholder: README.md section, README.ru.md, docs/architecture.md, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What should be improved?
+      description: Explain what is unclear, outdated, broken, or misleading.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested wording
+      description: Optional. Keep it concise.
+    validations:
+      required: false

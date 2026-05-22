@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Live portfolio site
+    url: https://nikitka-ai-pro-headphones.vercel.app/
+    about: Open the deployed portfolio website.
+  - name: Security policy
+    url: https://github.com/AI-Nikitka93/nikitka-ai-pro-headphones/security/policy
+    about: Do not disclose sensitive security details in public issues.
