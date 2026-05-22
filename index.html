@@ -7,7 +7,7 @@
     <meta name="description" content="Премиальный портфолио-сайт вымышленных наушников Nikitka AI PRO: кинематографичный hero, интерактивная анатомия, живой радиотест и продуктовая motion-витрина.">
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="preload" as="image" href="assets/hero-cinematic-desktop.avif" imagesrcset="assets/hero-cinematic-mobile.avif 960w, assets/hero-cinematic-desktop.avif 1920w" imagesizes="100vw" type="image/avif" fetchpriority="high">
-    <link rel="stylesheet" href="style.css?v=20260522-layerdeck">
+    <link rel="stylesheet" href="style.css?v=20260522-scrub-anatomy">
 </head>
 <body>
 
@@ -314,51 +314,29 @@
                     <div>
                         <h3 class="exploded-title">Интерактивная Нейро-Анатомия</h3>
                         <p class="exploded-copy">
-                            Лабораторная витрина слоев: прозрачный корпус, драйвер, AI-плата и сенсорная мембрана собраны вокруг одной оси.
+                            Прозрачный корпус раскрывает акустический тракт: драйвер, AI-плата и сенсорная мембрана сходятся в одном компактном модуле.
                         </p>
 
-                        <div class="layer-command-deck" aria-label="Слои анатомии наушников">
-                            <button class="layer-command active" type="button" data-layer="shell" aria-pressed="true">
-                                <span class="layer-command-index">01</span>
-                                <span>
-                                    <strong>Корпус</strong>
-                                    <small>стеклокарбон 0.8 мм</small>
-                                </span>
+                        <div class="anatomy-control-strip">
+                            <button id="anatomy-scan-toggle" class="anatomy-scan-btn" type="button" aria-pressed="false">
+                                Разобрать
                             </button>
-                            <button class="layer-command" type="button" data-layer="driver" aria-pressed="false">
-                                <span class="layer-command-index">02</span>
-                                <span>
-                                    <strong>Драйвер</strong>
-                                    <small>12 мм графеновая мембрана</small>
-                                </span>
-                            </button>
-                            <button class="layer-command" type="button" data-layer="board" aria-pressed="false">
-                                <span class="layer-command-index">03</span>
-                                <span>
-                                    <strong>AI-чип</strong>
-                                    <small>адаптивная обработка</small>
-                                </span>
-                            </button>
-                            <button class="layer-command" type="button" data-layer="case" aria-pressed="false">
-                                <span class="layer-command-index">04</span>
-                                <span>
-                                    <strong>Сенсор</strong>
-                                    <small>touch-панель управления</small>
-                                </span>
-                            </button>
+                            <div class="anatomy-progress" aria-hidden="true">
+                                <span id="anatomy-progress-fill"></span>
+                            </div>
+                            <span id="anatomy-readout" class="anatomy-readout" aria-live="polite">Собранный режим</span>
                         </div>
 
-                        <div class="layer-action-row">
-                            <button id="layer-auto-scan" class="layer-auto-btn" type="button" aria-pressed="false">
-                                <span class="layer-auto-icon" aria-hidden="true"></span>
-                                <span class="layer-auto-text">Автоскан</span>
-                            </button>
-                            <span id="layer-readout" class="layer-readout" aria-live="polite">01 / Корпус активен</span>
+                        <div class="anatomy-proof-line" aria-label="Ключевые слои">
+                            <span>0.8 мм корпус</span>
+                            <span>12 мм драйвер</span>
+                            <span>AI DSP</span>
                         </div>
                     </div>
                     
                     <div class="design-right exploded-design-stage">
-                        <div id="exploded-viewer" class="exploded-viewer active" data-active-layer="shell">
+                        <div id="exploded-viewer" class="exploded-viewer" data-phase="sealed">
+                            <span class="anatomy-orbit-hint">NEURO LAYER SCAN</span>
                             <!-- Shared definitions for premium gradients and glow filters -->
                             <svg class="svg-defs">
                                 <defs>
@@ -383,7 +361,7 @@
                             </svg>
 
                             <!-- Layer 4: Shell Casing -->
-                            <svg class="layer-img layer-shell active-layer" data-layer="shell" viewBox="0 0 120 180" width="140">
+                            <svg class="layer-img layer-shell" data-layer="shell" viewBox="0 0 120 180" width="140">
                                 <path d="M60 15 C30 15, 15 45, 15 90 C15 135, 45 165, 60 165 C75 165, 105 135, 105 90 C105 45, 90 15, 60 15 Z" fill="none" stroke="url(#neon-blue-grad)" stroke-width="2" stroke-dasharray="4 4" filter="url(#glow-filter)"/>
                                 <path d="M60 25 C35 25, 25 50, 25 90 C25 130, 35 155, 60 155 C85 155, 95 130, 95 90 C95 50, 85 25, 60 25 Z" fill="rgba(8, 6, 20, 0.4)" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.6"/>
                             </svg>
@@ -420,7 +398,7 @@
                                 <path d="M60 68 L60 76 M60 104 L60 112" stroke="#8a2be2" stroke-width="2" stroke-opacity="0.8"/>
                             </svg>
 
-                            <span class="viewer-label lbl-shell active" data-layer-label="shell">Корпус</span>
+                            <span class="viewer-label lbl-shell" data-layer-label="shell">Корпус</span>
                             <span class="viewer-label lbl-driver" data-layer-label="driver">12мм Драйвер</span>
                             <span class="viewer-label lbl-board" data-layer-label="board">Чип AI</span>
                             <span class="viewer-label lbl-case" data-layer-label="case">Сенсор</span>
@@ -923,6 +901,6 @@
         </div>
     </footer>
 
-    <script src="app.js?v=20260522-layerdeck"></script>
+    <script src="app.js?v=20260522-scrub-anatomy"></script>
 </body>
 </html>

@@ -619,94 +619,172 @@ function initModelSwitcher() {
    ========================================================================== */
 function initExplodedViewer() {
     const viewer = document.getElementById('exploded-viewer');
-    const layerButtons = document.querySelectorAll('.layer-command');
     const layerImages = viewer ? viewer.querySelectorAll('.layer-img[data-layer]') : [];
     const layerLabels = viewer ? viewer.querySelectorAll('.viewer-label[data-layer-label]') : [];
-    const autoButton = document.getElementById('layer-auto-scan');
-    const autoButtonText = autoButton ? autoButton.querySelector('.layer-auto-text') : null;
-    const readout = document.getElementById('layer-readout');
+    const panel = viewer ? viewer.closest('.exploded-panel') : null;
+    const scanButton = document.getElementById('anatomy-scan-toggle');
+    const progressFill = document.getElementById('anatomy-progress-fill');
+    const readout = document.getElementById('anatomy-readout');
 
-    if (!viewer || !layerButtons.length) return;
+    if (!viewer || !layerImages.length) return;
 
     const layers = [
-        { key: 'shell', index: '01', name: 'Корпус' },
-        { key: 'driver', index: '02', name: 'Драйвер' },
-        { key: 'board', index: '03', name: 'AI-чип' },
-        { key: 'case', index: '04', name: 'Сенсор' }
+        { key: 'sealed', label: 'Собранный режим', threshold: 0 },
+        { key: 'shell', label: 'Корпус раскрыт', threshold: 0.18 },
+        { key: 'driver', label: 'Драйвер в фокусе', threshold: 0.42 },
+        { key: 'board', label: 'AI-чип в фокусе', threshold: 0.68 },
+        { key: 'case', label: 'Сенсор раскрыт', threshold: 0.88 }
     ];
-    const layerByKey = layers.reduce((acc, layer) => {
-        acc[layer.key] = layer;
-        return acc;
-    }, {});
-    let activeIndex = 0;
-    let scanTimer = null;
+    const layerMap = {
+        shell: viewer.querySelector('.layer-shell'),
+        driver: viewer.querySelector('.layer-driver'),
+        board: viewer.querySelector('.layer-board'),
+        case: viewer.querySelector('.layer-case')
+    };
+    const clamp = (value, min = 0, max = 1) => Math.min(Math.max(value, min), max);
+    const smooth = (value) => value * value * (3 - (2 * value));
+    let currentProgress = 0;
+    let userLocked = false;
+    let animationFrame = null;
 
-    const setLayer = (layerKey) => {
-        const layer = layerByKey[layerKey] || layers[0];
-        activeIndex = layers.findIndex(item => item.key === layer.key);
-
-        viewer.classList.add('active');
-        viewer.dataset.activeLayer = layer.key;
-
-        layerButtons.forEach((button) => {
-            const isActive = button.dataset.layer === layer.key;
-            button.classList.toggle('active', isActive);
-            button.setAttribute('aria-pressed', String(isActive));
+    const getPhase = (progress) => {
+        let phase = layers[0];
+        layers.forEach((layer) => {
+            if (progress >= layer.threshold) phase = layer;
         });
+        return phase;
+    };
 
-        layerImages.forEach((image) => {
-            image.classList.toggle('active-layer', image.dataset.layer === layer.key);
-        });
+    const applyTransform = (element, transform, opacity, glow = 0.2) => {
+        if (!element) return;
+        element.style.transform = transform;
+        element.style.opacity = String(opacity);
+        element.style.filter = `drop-shadow(0 0 ${Math.round(18 + (glow * 18))}px rgba(0, 240, 255, ${glow}))`;
+    };
+
+    const renderProgress = (rawProgress, tilt = 0) => {
+        const progress = clamp(rawProgress);
+        const eased = smooth(progress);
+        const phase = getPhase(progress);
+        currentProgress = progress;
+
+        viewer.classList.toggle('active', progress > 0.08);
+        viewer.dataset.phase = phase.key;
+
+        const mobileScale = window.matchMedia('(max-width: 768px)').matches ? 0.64 : 1;
+        const shellX = -104 * eased * mobileScale;
+        const driverX = -36 * eased * mobileScale;
+        const boardX = 38 * eased * mobileScale;
+        const caseX = 104 * eased * mobileScale;
+        const tiltX = tilt * 8 * mobileScale;
+
+        applyTransform(layerMap.shell, `translate3d(${shellX + tiltX}px, ${tilt * 4}px, 0) scale(${1 - (0.08 * eased)}) rotate(${-10 * eased}deg)`, 0.48 + (0.46 * eased), 0.22 + (0.36 * eased));
+        applyTransform(layerMap.driver, `translate3d(${driverX + (tiltX * 0.55)}px, ${tilt * 2}px, 0) scale(${0.96 + (0.06 * eased)}) rotate(${-5 * eased}deg)`, 0.42 + (0.52 * eased), 0.18 + (0.3 * eased));
+        applyTransform(layerMap.board, `translate3d(${boardX + (tiltX * 0.35)}px, ${-tilt * 2}px, 0) scale(${0.98 + (0.09 * eased)}) rotate(${5 * eased}deg)`, 0.42 + (0.52 * eased), 0.18 + (0.34 * eased));
+        applyTransform(layerMap.case, `translate3d(${caseX + (tiltX * 0.75)}px, ${-tilt * 4}px, 0) scale(${1 + (0.12 * eased)}) rotate(${10 * eased}deg)`, 0.88 + (0.12 * eased), 0.24 + (0.4 * eased));
 
         layerLabels.forEach((label) => {
-            label.classList.toggle('active', label.dataset.layerLabel === layer.key);
+            const key = label.dataset.layerLabel;
+            const isActive = phase.key === key || (progress > 0.9 && key === 'case');
+            label.classList.toggle('active', isActive);
         });
 
+        if (progressFill) {
+            progressFill.style.transform = `scaleX(${progress})`;
+        }
         if (readout) {
-            readout.textContent = `${layer.index} / ${layer.name} активен`;
+            readout.textContent = phase.label;
+        }
+        if (scanButton) {
+            const isOpen = progress > 0.68;
+            scanButton.classList.toggle('is-open', isOpen);
+            scanButton.setAttribute('aria-pressed', String(isOpen));
+            scanButton.textContent = isOpen ? 'Собрать' : 'Разобрать';
         }
     };
 
-    const stopScan = () => {
-        if (scanTimer) {
-            clearInterval(scanTimer);
-            scanTimer = null;
-        }
-        viewer.classList.remove('scanning');
-        if (autoButton) {
-            autoButton.classList.remove('active');
-            autoButton.setAttribute('aria-pressed', 'false');
-            if (autoButtonText) autoButtonText.textContent = 'Автоскан';
-        }
+    const animateTo = (target) => {
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        const start = currentProgress;
+        const startedAt = performance.now();
+        const duration = 620;
+
+        const tick = (time) => {
+            const progress = clamp((time - startedAt) / duration);
+            const eased = smooth(progress);
+            renderProgress(start + ((target - start) * eased));
+            if (progress < 1) {
+                animationFrame = requestAnimationFrame(tick);
+            }
+        };
+
+        animationFrame = requestAnimationFrame(tick);
     };
 
-    layerButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-            stopScan();
-            setLayer(button.dataset.layer);
-        });
+    const updateFromScroll = () => {
+        if (!panel || userLocked) return;
+        const rect = panel.getBoundingClientRect();
+        const viewport = window.innerHeight || document.documentElement.clientHeight;
+        const progress = clamp((viewport * 0.72 - rect.top) / (rect.height * 0.9));
+        renderProgress(progress);
+    };
+
+    viewer.addEventListener('pointermove', (event) => {
+        if (window.matchMedia('(pointer: coarse)').matches) return;
+        const rect = viewer.getBoundingClientRect();
+        const progress = clamp((event.clientX - rect.left) / rect.width);
+        const tilt = clamp(((event.clientY - rect.top) / rect.height) - 0.5, -0.5, 0.5);
+        userLocked = true;
+        viewer.classList.add('is-scrubbing');
+        renderProgress(progress, tilt);
     });
 
-    if (autoButton) {
-        autoButton.addEventListener('click', () => {
-            if (scanTimer) {
-                stopScan();
-                return;
-            }
+    viewer.addEventListener('pointerleave', () => {
+        if (window.matchMedia('(pointer: coarse)').matches) return;
+        userLocked = false;
+        viewer.classList.remove('is-scrubbing');
+        updateFromScroll();
+    });
 
-            viewer.classList.add('scanning');
-            autoButton.classList.add('active');
-            autoButton.setAttribute('aria-pressed', 'true');
-            if (autoButtonText) autoButtonText.textContent = 'Стоп скан';
-
-            scanTimer = setInterval(() => {
-                activeIndex = (activeIndex + 1) % layers.length;
-                setLayer(layers[activeIndex].key);
-            }, 1400);
+    if (scanButton) {
+        scanButton.addEventListener('click', () => {
+            userLocked = true;
+            const target = currentProgress > 0.6 ? 0 : 1;
+            viewer.classList.toggle('is-scrubbing', target > 0);
+            animateTo(target);
+            window.setTimeout(() => {
+                if (target === 0) {
+                    userLocked = false;
+                    viewer.classList.remove('is-scrubbing');
+                }
+            }, 680);
         });
     }
 
-    setLayer('shell');
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+            updateFromScroll();
+            ticking = false;
+        });
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+        renderProgress(currentProgress);
+    });
+
+    if ('IntersectionObserver' in window && panel) {
+        const observer = new IntersectionObserver((entries) => {
+            const entry = entries[0];
+            if (entry && entry.isIntersecting) updateFromScroll();
+        }, { threshold: [0.15, 0.35, 0.6] });
+        observer.observe(panel);
+    }
+
+    renderProgress(0);
+    updateFromScroll();
 }
 
 /* ==========================================================================
