@@ -926,7 +926,11 @@ section {
     overflow: hidden;
     background:
         linear-gradient(135deg, rgba(8, 6, 20, 0.82), rgba(4, 3, 12, 0.9)),
-        var(--glass-bg);
+    var(--glass-bg);
+}
+
+#product-3d {
+    scroll-margin-top: 6.5rem;
 }
 
 .exploded-copy-block {
