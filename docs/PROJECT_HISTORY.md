@@ -3,3 +3,9 @@
 - Files: README.md; README.ru.md; LICENSE; CONTRIBUTING.md; SECURITY.md; SUPPORT.md; CODE_OF_CONDUCT.md; CHANGELOG.md; docs/architecture.md; docs/GITHUB_PACKAGING_AUDIT.md; docs/PROJECT_HISTORY.md; .github/CODEOWNERS; .github/PULL_REQUEST_TEMPLATE.md; .github/ISSUE_TEMPLATE/01-site-bug.yml; .github/ISSUE_TEMPLATE/02-docs-feedback.yml; .github/ISSUE_TEMPLATE/config.yml.
 - Verification: node --check app.js; node --check three-anatomy.js; python -m py_compile tools\create_nikitka_product_model.py; YAML parse check for .github/ISSUE_TEMPLATE/*.yml; git diff --check.
 - Status: DONE.
+
+### 2026-05-23 01:18:04 +03:00 — Site rights notice
+- Changed: Added a subtle portfolio-review rights signal to the live HTML head and footer, with a direct footer link to the repository license.
+- Files: index.html; docs/PROJECT_HISTORY.md.
+- Verification: node --check app.js; node --check three-anatomy.js; python -m py_compile tools\create_nikitka_product_model.py; YAML parse check for .github/ISSUE_TEMPLATE/*.yml; git diff --check.
+- Status: DONE.
