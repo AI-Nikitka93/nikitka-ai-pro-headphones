@@ -2035,9 +2035,10 @@ section {
 }
 
 .radio-select {
-    background: rgba(255,255,255,0.04);
+    background: rgba(14, 11, 27, 0.96);
     border: 1px solid rgba(255,255,255,0.08);
     color: #fff;
+    color-scheme: dark;
     padding: 0.8rem 1.2rem;
     border-radius: 8px;
     outline: none;
@@ -2051,6 +2052,16 @@ section {
 
 .radio-select:focus {
     border-color: var(--secondary);
+}
+
+.radio-select option {
+    background: #100d1f;
+    color: #f3f4f6;
+}
+
+.radio-select option:checked {
+    background: #2563eb;
+    color: #fff;
 }
 
 .btn-play {

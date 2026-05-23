@@ -9,3 +9,9 @@
 - Files: index.html; docs/PROJECT_HISTORY.md.
 - Verification: node --check app.js; node --check three-anatomy.js; python -m py_compile tools\create_nikitka_product_model.py; YAML parse check for .github/ISSUE_TEMPLATE/*.yml; git diff --check.
 - Status: DONE.
+
+### 2026-05-23 12:17:41 +03:00 — Radio select contrast fix
+- Changed: Fixed the native radio station dropdown contrast by forcing the audio select and its options into a dark color scheme with readable option text; bumped the stylesheet query string so browsers load the corrected CSS.
+- Files: style.css; index.html; docs/PROJECT_HISTORY.md.
+- Verification: node --check app.js; node --check three-anatomy.js; git diff --check; Playwright computed-style check for #radio-select and all six options.
+- Status: DONE.
